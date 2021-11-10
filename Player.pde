@@ -110,8 +110,8 @@ class Player {
 
   void applyMovement() {
     // Move player
-    //PVector responsiveVelocity = responsiveSpeed(velocity);
-    location.add(velocity);
+    PVector responsiveVelocity = responsiveSpeed(velocity);
+    location.add(responsiveVelocity);
   }
 
   void initBounce() {
@@ -318,8 +318,8 @@ class Player {
   }
   
   PVector responsiveSpeed(PVector speed) {
-    float responsiveXPos = speed.x * (millis() - ticksLastUpdate) * 0.001;
-    float responsiveYPos = speed.y * (millis() - ticksLastUpdate) * 0.001;
+    float responsiveXPos = speed.x * (millis() - ticksLastUpdate) * 0.05;
+    float responsiveYPos = speed.y * (millis() - ticksLastUpdate) * 0.05;
     PVector responsiveSpeed = new PVector(responsiveXPos, responsiveYPos);
     ticksLastUpdate = millis();
     return responsiveSpeed;
