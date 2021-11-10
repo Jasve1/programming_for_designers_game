@@ -9,6 +9,8 @@ class Player {
     halfWidth,
     gravity;
     
+  private int ticksLastUpdate = 0;
+    
   private PVector velocity, location, playerDimension;
 
   private boolean hasPlayed, isOnGround;
@@ -54,7 +56,7 @@ class Player {
     initBounce();
     initJumping();
     initGravity();
-    applyMovementToPlayer();
+    applyMovement();
   }
  
 
@@ -106,8 +108,9 @@ class Player {
     velocity.y += gravity;
   }
 
-  void applyMovementToPlayer() {
+  void applyMovement() {
     // Move player
+    //PVector responsiveVelocity = responsiveSpeed(velocity);
     location.add(velocity);
   }
 
@@ -312,5 +315,13 @@ class Player {
   
   float centerOrigin(float origin, float objectSize) {
     return origin - (objectSize/2);
+  }
+  
+  PVector responsiveSpeed(PVector speed) {
+    float responsiveXPos = speed.x * (millis() - ticksLastUpdate) * 0.001;
+    float responsiveYPos = speed.y * (millis() - ticksLastUpdate) * 0.001;
+    PVector responsiveSpeed = new PVector(responsiveXPos, responsiveYPos);
+    ticksLastUpdate = millis();
+    return responsiveSpeed;
   }
 }

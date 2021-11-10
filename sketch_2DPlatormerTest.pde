@@ -13,6 +13,8 @@ void setup() {
   groundBounce = -0.2;
   worldGravity = 0.8;
   player = new Player(130, #934040);
+  
+  /* TEST PLATFORMS */
   HashMap<Integer, Integer> colors_map = new HashMap<Integer, Integer>();
   colors_map.put(0, #5B97B4);
   colors_map.put(1, #B44747);
@@ -31,6 +33,7 @@ void setup() {
     
     platforms.add(platform);
   }
+  /* TEST PLATFORMS */
 }
 
 void draw() {
