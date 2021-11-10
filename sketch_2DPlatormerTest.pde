@@ -1,7 +1,7 @@
 // Player Movement
 
 Player player;
-ArrayList<GameObject> platforms = new ArrayList<GameObject>();
+GameObject[] platforms = new GameObject[5];
 
 boolean left, right, up, down, space;
 float groundFriction, groundBounce, worldGravity;
@@ -31,7 +31,7 @@ void setup() {
     if (colors_map.get(i) != null) { platformColor = colors_map.get(i); }
     GameObject platform = new GameObject(platformWidth, platformHeight, platformX, platformY, platformColor, Type.Platform);
     
-    platforms.add(platform);
+    platforms[i] = platform;
   }
   /* TEST PLATFORMS */
 }
