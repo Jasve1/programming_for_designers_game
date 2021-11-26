@@ -1,17 +1,15 @@
-// Player Movement
-
 Player player;
 Level level;
 
+// World Variables
 boolean left, right, up, down, space;
-float groundFriction, groundBounce, worldGravity;
+float groundFriction = 0.9;
+float groundBounce = -0.2;
+float worldGravity = 0.8;
 
 void setup() {
   size(1500, 800);
   
-  groundFriction = 0.9;
-  groundBounce = -0.2;
-  worldGravity = 0.8;
   player = new Player(130, #934040);
   level = new Level(1);
 }

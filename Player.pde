@@ -1,31 +1,33 @@
 class Player {
-  // Player Variables
-  private float pWidth, pHeight, playerMass,
-    xAcceleration, 
-    speed, 
-    speedLimit,
-    jumpForce,
-    halfWidth,
-    gravity;
+  // Player movement
+  private PVector location = new PVector(400, 700);
+  private PVector velocity = new PVector(0, 0);
+  private float xAcceleration = 0;
+  private float speed = 0.2;
+  private float speedLimit = 5;
+  private float jumpForce = -20;
+  private float gravity = worldGravity;
+  private int ticksLastUpdate = 0;
+
+  // Player Size
+  private float pWidth, pHeight, playerMass, halfWidth;
+  private PVector playerDimension;
     
   private color pColor;
-    
-  private PVector velocity, location, playerDimension;
-  
-  private int ticksLastUpdate;
 
   // Collision Variables
-  private boolean isOnGround;
+  private boolean isOnGround = false;
   private CollisionSides collisionSide;
   
   // Objects
   private GameObject collidedObject;
-  
-  // Animation Variables
-  private float frameNumber, maxFrames;
-  private boolean hasPlayed;
-  private int animationUpdate;
-  private int durationOneFrame;
+
+  // Player animation
+  private float maxFrames = 28;
+  private float frameNumber = 1;
+  private boolean hasPlayed = false;
+  private int animationUpdate = millis();
+  private int durationOneFrame = 10;
 
   Player(float mass, color colorValue) {
     // Player size
@@ -34,29 +36,9 @@ class Player {
     pWidth = playerMass*playerDimension.x;
     pHeight = playerMass*playerDimension.y;
     halfWidth = pWidth/2;
-
-    // Player movement
-    location = new PVector(400, height -100);
-    velocity = new PVector(0, 0);
-    xAcceleration = 0;
-    speed = 0.2;
-    speedLimit = 5;
-    jumpForce = -20;
-    gravity = worldGravity;
-    ticksLastUpdate = 0;
-
-    // Player animation
-    maxFrames = 28;
-    frameNumber = 1;
-    hasPlayed = false;
-    animationUpdate = millis();
-    durationOneFrame = 10;
     
     // Player color
     pColor = colorValue;
-    
-    // Collision
-    isOnGround = false;
   }
 
   void update() {

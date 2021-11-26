@@ -4,7 +4,7 @@ class GameObject {
   
   private PVector location;
   
-  private boolean hasCollided;
+  private boolean hasCollided = false;
   
   private Type type;
   
@@ -13,7 +13,6 @@ class GameObject {
     pHeight = h;
     location = new PVector(x, y);
     pColor = colorValue;
-    hasCollided = false;
     type = newType;
   }
   
