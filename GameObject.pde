@@ -23,6 +23,9 @@ class GameObject {
   PVector getLocation() { return location; }
   Type getType() { return type; }
   
+  // Set methods
+  void setLocation(float x, float y) { location = new PVector(x, y); }
+  
   void changeColor(color newColor) {
     pColor = newColor;
   }
@@ -32,6 +35,7 @@ class GameObject {
   }
   
   void display() {
+    noStroke();
     if (hasCollided) {
       fill(#A6C6C0);
     } else {

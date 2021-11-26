@@ -1,24 +1,31 @@
 class Player {
-  // Player variables
+  // Player Variables
   private float pWidth, pHeight, playerMass,
     xAcceleration, 
     speed, 
-    speedLimit, 
-    frameNumber, maxFrames,
+    speedLimit,
     jumpForce,
     halfWidth,
     gravity;
     
-  private int ticksLastUpdate = 0;
+  private color pColor;
     
   private PVector velocity, location, playerDimension;
+  
+  private int ticksLastUpdate;
 
-  private boolean hasPlayed, isOnGround;
-  
-  private color pColor;
-  
+  // Collision Variables
+  private boolean isOnGround;
   private CollisionSides collisionSide;
+  
+  // Objects
   private GameObject collidedObject;
+  
+  // Animation Variables
+  private float frameNumber, maxFrames;
+  private boolean hasPlayed;
+  private int animationUpdate;
+  private int durationOneFrame;
 
   Player(float mass, color colorValue) {
     // Player size
@@ -36,11 +43,14 @@ class Player {
     speedLimit = 5;
     jumpForce = -20;
     gravity = worldGravity;
+    ticksLastUpdate = 0;
 
     // Player animation
     maxFrames = 28;
     frameNumber = 1;
     hasPlayed = false;
+    animationUpdate = millis();
+    durationOneFrame = 10;
     
     // Player color
     pColor = colorValue;
@@ -161,10 +171,11 @@ class Player {
     }
 
     // Animation frames
-    if (frameNumber < maxFrames) {
+    int delta = millis() - animationUpdate;
+    if (delta >= durationOneFrame) {
       frameNumber++;
-    } else {
-      frameNumber = 1;
+      if (frameNumber > maxFrames) { frameNumber = 1; }
+      animationUpdate += delta;
     }
   }
 
