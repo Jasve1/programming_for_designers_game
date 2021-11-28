@@ -102,8 +102,8 @@ class Player {
 
   void applyMovement() {
     // Move player
-    PVector responsiveVelocity = responsiveSpeed(velocity);
-    location.add(responsiveVelocity);
+    PVector alignedVelocity = alignWMillis(velocity);
+    location.add(alignedVelocity);
   }
 
   void initBounce() {
@@ -224,7 +224,8 @@ class Player {
       collidedObject = object;
       
       // Detect collision side
-      float overlapX = combinedHalfWidths - (float)horizontalDistance;
+      float xCollisionBuffer = 1; // Without this player gets stuck when sliding across multiple platforms.
+      float overlapX = (combinedHalfWidths - (float)horizontalDistance) + xCollisionBuffer;
       float overlapY = combinedHalfHeights - (float)verticalDistance;
       
       if (overlapX >= overlapY) {
@@ -240,10 +241,10 @@ class Player {
         // Horizontal Collision (X)
         if (location.x < objectLocation.x) {
           location.x += overlapX;
-          collisionSide = CollisionSides.Left;
+          collisionSide = CollisionSides.Right;
         } else {
           location.x -= overlapX;
-          collisionSide = CollisionSides.Right;
+          collisionSide = CollisionSides.Left;
         }
       }
       
@@ -267,13 +268,14 @@ class Player {
       float platformHeight = collidedObject.getPHeight();
       float platformWidth = collidedObject.getPWidth();
       PVector platformLocation = collidedObject.getLocation();
+      println(collisionSide);
       
       switch(collisionSide) {
-        case Left:
+        case Right:
           velocity.x *= groundBounce;
           location.x = platformLocation.x - (platformWidth/2) - (pWidth/2);
           break;
-        case Right:
+        case Left:
           velocity.x *= groundBounce;
           location.x = platformLocation.x + (platformWidth/2) + (pWidth/2);
           break;
@@ -310,11 +312,11 @@ class Player {
     return origin - (objectSize/2);
   }
   
-  PVector responsiveSpeed(PVector speed) {
-    float responsiveXPos = speed.x * (millis() - ticksLastUpdate) * 0.05;
-    float responsiveYPos = speed.y * (millis() - ticksLastUpdate) * 0.05;
-    PVector responsiveSpeed = new PVector(responsiveXPos, responsiveYPos);
+  PVector alignWMillis(PVector speed) {
+    float alignedXPos = speed.x * (millis() - ticksLastUpdate) * 0.05;
+    float alignedYPos = speed.y * (millis() - ticksLastUpdate) * 0.05;
+    PVector alignedSpeed = new PVector(alignedXPos, alignedYPos);
     ticksLastUpdate = millis();
-    return responsiveSpeed;
+    return alignedSpeed;
   }
 }
