@@ -268,7 +268,6 @@ class Player {
       float platformHeight = collidedObject.getPHeight();
       float platformWidth = collidedObject.getPWidth();
       PVector platformLocation = collidedObject.getLocation();
-      println(collisionSide);
       
       switch(collisionSide) {
         case Right:
