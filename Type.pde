@@ -1,3 +1,4 @@
 static public enum Type {
-  Platform
+  PLATFORM,
+  ENEMY
 }

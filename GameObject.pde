@@ -4,8 +4,6 @@ class GameObject {
   
   private PVector location;
   
-  private boolean hasCollided = false;
-  
   private Type type;
   
   GameObject(float w, float h, float x, float y, color colorValue, Type newType) {
@@ -29,17 +27,9 @@ class GameObject {
     pColor = newColor;
   }
   
-  void checkCollision(boolean isColliding) {
-    hasCollided = isColliding;
-  }
-  
   void display() {
     noStroke();
-    if (hasCollided) {
-      fill(#A6C6C0);
-    } else {
-      fill(pColor);
-    }
+    fill(pColor);
     rect(calcLocationX(location.x), calcLocationY(location.y), pWidth, pHeight);
   }
   
