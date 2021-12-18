@@ -4,13 +4,18 @@ Level level = null;
 GameState gameState = GameState.TITLE;
 int currentLevel = 1;
 int maxLevels = 5;
+HashMap<Integer,Integer> numOfEnemies = new HashMap<Integer,Integer>() {{
+  put(1, 3);
+}};
+HashMap<Integer,Integer> numOfPlatforms = new HashMap<Integer,Integer>() {{
+  put(1, 41);
+}};
 
 // World Variables
 boolean left, right, up, down, space;
 float groundFriction = 0.9;
 float groundBounce = -0.2;
 float worldGravity = 0.8;
-boolean applyGravity = false;
 int ticksLastUpdate = 0;
 
 void setup() {
@@ -19,6 +24,14 @@ void setup() {
 
 void draw() {
   background(255);
+  
+  gameStateManager();
+  
+  // TIMING FIX
+  ticksLastUpdate = millis();
+}
+
+void gameStateManager() {
   switch(gameState) {
     case TITLE:
       textSize(128);
@@ -29,8 +42,11 @@ void draw() {
       text("Press R to start", (width/2)-250, (height/2), 500, 300);
       break;
     case LEVEL:
-      if (level == null) { level = new Level(currentLevel, 3, 41); }
+      if (level == null) {
+        level = new Level(currentLevel, numOfEnemies.get(currentLevel), numOfPlatforms.get(currentLevel));
+      }
       level.display();
+      level.update();
       break;
     case LEVELCHANGE:
       level = null;
@@ -60,9 +76,6 @@ void draw() {
       level = null;
       break;
   }
-  
-  // TIMING FIX
-  ticksLastUpdate = millis();
 }
 
 void keyPressed() {

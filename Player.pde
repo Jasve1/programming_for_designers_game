@@ -23,12 +23,12 @@ class Player extends GameCharacter {
   
   void update() {
     initHorizontalMovement();
-    initFriction();
-    initSpeedLimit();
-    initBounce();
+    super.initGravity();
+    super.initFriction();
+    super.initSpeedLimit();
+    super.initBounce();
     initJumping();
-    initGravity();
-    applyMovement();
+    super.applyMovement();
     // TODO: ADD LOSE CONDITION, EX. IF HEALTH == 0 : GAMESTATE = GAMEOVER
     if (super.health == 0) {
       gameState = GameState.GAMEOVER;
@@ -37,7 +37,7 @@ class Player extends GameCharacter {
   
   /** MOVEMENT **/
   
-  void initHorizontalMovement() {
+  private void initHorizontalMovement() {
     // Horizontal Movement
     if (left && !right) {
       xAcceleration = -speed;
@@ -50,7 +50,7 @@ class Player extends GameCharacter {
     super.velocity.x += xAcceleration;
   }
   
-  void initJumping() {
+  private void initJumping() {
     // Jumping
     if (up && super.isOnGround) {
       super.isOnGround = false;
@@ -74,13 +74,13 @@ class Player extends GameCharacter {
 
   /** ANIMATIONS **/
 
-  void initAnimations() {
+  private void initAnimations() {
     if (!right && !left && !up && !down && super.isOnGround) {
       // Idle animation
       playIdleAnimation();
     } else if (down && super.isOnGround) {
       // Down animation
-      setSize(0.65, 0.35);
+      super.animateSize(0.65, 0.35);
     } else if (super.isOnGround && !down) {
       // Move animation
       playMoveAnimation();
@@ -89,7 +89,7 @@ class Player extends GameCharacter {
       playJumpAnimation();
     } else {
       // Reset
-      setSize(super.dimension.x, super.dimension.y);
+      super.animateSize(super.dimension.x, super.dimension.y);
     }
     
     if (up && super.isOnGround) {
@@ -105,44 +105,44 @@ class Player extends GameCharacter {
     }
   }
 
-  void playMoveAnimation() {
+  private void playMoveAnimation() {
     if (frameNumber == 1) {
-      setSize(0.46, 0.54);
+      super.animateSize(0.46, 0.54);
     } else if (frameNumber == (maxFrames * 0.15)) {
-      setSize(0.39, 0.61);
+      super.animateSize(0.39, 0.61);
     } else if (frameNumber == (maxFrames * 0.25)) {
-      setSize(0.46, 0.54);
+      super.animateSize(0.46, 0.54);
     } else if (frameNumber == (maxFrames * 0.5)) {
-      setSize(0.54, 0.46);
+      super.animateSize(0.54, 0.46);
     } else if (frameNumber == (maxFrames * 0.75)) {
-      setSize(0.61, 0.39);
+      super.animateSize(0.61, 0.39);
     } else if (frameNumber == maxFrames) {
-      setSize(0.54, 0.46);
+      super.animateSize(0.54, 0.46);
     }
   }
 
-  void playIdleAnimation() {
+  private void playIdleAnimation() {
     if (frameNumber == 1) {
-      setSize(0.52, 0.48);
+      super.animateSize(0.52, 0.48);
     } else if (frameNumber == (maxFrames * 0.5)) {
-      setSize(0.51, 0.49);
+      super.animateSize(0.51, 0.49);
     } else if (frameNumber == (maxFrames * 0.75)) {
-      setSize(0.48, 0.52);
+      super.animateSize(0.48, 0.52);
     } else if (frameNumber == maxFrames) {
-      setSize(super.dimension.x, super.dimension.y);
+      super.animateSize(super.dimension.x, super.dimension.y);
     }
   }
 
-  void playJumpAnimation() {
+  private void playJumpAnimation() {
     if (!hasPlayed) {
       if (frameNumber == 1) {
-        setSize(0.61, 0.39);
+        super.animateSize(0.61, 0.39);
       } else if (frameNumber == (maxFrames * 0.5)) {
-        setSize(0.42, 0.58);
+        super.animateSize(0.42, 0.58);
       } else if (frameNumber == (maxFrames * 0.75)) {
-        setSize(0.3, 0.7);
+        super.animateSize(0.3, 0.7);
       } else if (frameNumber == maxFrames) {
-        setSize(0.39, 0.61);
+        super.animateSize(0.39, 0.61);
         hasPlayed = true;
       }
     }

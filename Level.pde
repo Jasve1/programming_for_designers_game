@@ -11,7 +11,7 @@ class Level {
     renderLevel(levelImage);
   }
   
-  void renderLevel(PImage levelImage) {
+  private void renderLevel(PImage levelImage) {
     color pixelColor = color(0,0,0);
     int averageColor = 0;
     int tileSize = 50;
@@ -46,7 +46,6 @@ class Level {
   
   void display() {
     player.display();
-    player.update();
 
     for(int i = 0; i < enemies.length; i++) {
       enemies[i].display();
@@ -55,25 +54,65 @@ class Level {
     for(int i = 0; i < platforms.length; i++) {
       platforms[i].display();
     }
+  }
+  
+  void update() {
+    player.update();
     
+    for(int i = 0; i < enemies.length; i++) {
+      enemies[i].update();
+    }
+    
+    checkPlatformCollision();
+    checkEnemyCollision();
+    
+    // Remove dead enemies
+    for(int i = 0; i < enemies.length; i++) {
+      if (enemies[i].getHealth() == 0) {
+        removeDeadEnemy(i);
+      }
+    }
+  }
+  
+  private void checkPlatformCollision() {
     for(int i = 0; i < platforms.length; i++) {
       float platformHeight = platforms[i].getPHeight();
       float platformWidth = platforms[i].getPWidth();
       PVector platformLocation = platforms[i].getLocation();
 
       player.checkCollision(platformHeight, platformWidth, platformLocation, Type.PLATFORM);
-
       for(int e = 0; e < enemies.length; e++) {
         enemies[e].checkCollision(platformHeight, platformWidth, platformLocation, Type.PLATFORM);
       }
     }
-    
+  }
+  
+  private void checkEnemyCollision() {
     for(int i = 0; i < enemies.length; i++) {
-      enemies[i].update();
       float enemyHeight = enemies[i].getHeight();
       float enemyWidth = enemies[i].getWidth();
       PVector enemyLocation = enemies[i].getLocation();
+
       player.checkCollision(enemyHeight, enemyWidth, enemyLocation, Type.ENEMY);
+
+      // Enemies can collide with other enemies potentially destroying them
+      for(int e = 0; e < enemies.length; e++) {
+        if (e != i) {
+          enemies[e].checkCollision(enemyHeight, enemyWidth, enemyLocation, Type.ENEMY);
+        }
+      }
     }
+  }
+  
+  private void removeDeadEnemy(int indexOfDead) {
+    Enemy[] tempEnemyList = new Enemy[enemies.length - 1];
+    int currentEnemy = 0;
+    for(int i = 0; i < enemies.length; i++) {
+      if (i != indexOfDead) {
+        tempEnemyList[currentEnemy] = enemies[i];
+        currentEnemy++;
+      }
+    }
+    enemies = tempEnemyList;
   }
 }

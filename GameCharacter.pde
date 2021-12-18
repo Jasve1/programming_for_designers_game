@@ -1,20 +1,21 @@
 class GameCharacter {
   // Movement
-  private PVector position;
-  private PVector velocity = new PVector(0, 0);
+  protected PVector velocity = new PVector(0, 0);
+  protected float gravity = worldGravity;
+  protected PVector position;
   private float speedLimit = 5;
-  private float gravity = worldGravity;
 
   // Size
-  private float cWidth, cHeight, mass, halfWidth;
-  private PVector dimension;
+  protected PVector dimension;
+  protected float cWidth, cHeight;
+  private float mass, halfWidth;
 
   // Collision Variables
-  private boolean isOnGround = false;
+  protected boolean isOnGround = false;
   private CollisionSides collisionSide;
   
   // Health
-  private float health;
+  protected float health;
 
   GameCharacter(float newMass, float x, float y, float newHealth) {
     // TODO: ADD LIFE VAR TO DETERMIN IF CHARACTER SHOULD DIE
@@ -34,21 +35,21 @@ class GameCharacter {
   PVector getLocation() { return position; }
   float getWidth() { return cWidth; }
   float getHeight() { return cHeight; }
+  float getHealth() { return health; }
   
   // SET
   void setLocation(PVector newPosition) { position = newPosition; }
- 
 
   /** Movement Logic **/
 
-  void initFriction() {
+  protected void initFriction() {
     if (!right && !left && isOnGround) {
       // Apply friction
       velocity.x *= groundFriction;
     }
   }
 
-  void initSpeedLimit() {
+  protected void initSpeedLimit() {
     // Speedlimit
     if (velocity.x > speedLimit) {
       velocity.x = speedLimit;
@@ -57,18 +58,12 @@ class GameCharacter {
     }
   }
 
-  void initGravity() {
+  protected void initGravity() {
     // Apply gravity
     velocity.y += gravity;
   }
 
-  void applyMovement() {
-    // Move player
-    PVector alignedVelocity = alignWMillis(velocity);
-    position.add(alignedVelocity);
-  }
-
-  void initBounce() {
+  protected void initBounce() {
     // Bounce off left screen
     if (position.x <= halfWidth) {
       velocity.x *= groundBounce;
@@ -80,6 +75,12 @@ class GameCharacter {
       position.y = height;
       isOnGround = true;
     }
+  }
+  
+  protected void applyMovement() {
+    // Move player
+    PVector timedVelocity = timeSpeedWMillis(velocity);
+    position.add(timedVelocity);
   }
   
   
@@ -130,18 +131,18 @@ class GameCharacter {
     }
   }
   
-  double getHorizontalDistance(float x1, float x2) {
+  private double getHorizontalDistance(float x1, float x2) {
     float xDistance = x1 - x2;
     
     return Math.sqrt(Math.pow(xDistance, 2));
   }
-  double getVerticalDistance(float y1, float y2) {
+  private double getVerticalDistance(float y1, float y2) {
     float yDistance = y1 - y2;
     
     return Math.sqrt(Math.pow(yDistance, 2));
   }
   
-  void handlePlaformCollisions(float objectHeight, float objectWidth, PVector objectLocation) {
+  private void handlePlaformCollisions(float objectHeight, float objectWidth, PVector objectLocation) {
       switch(collisionSide) {
         case RIGHT:
           velocity.x *= groundBounce;
@@ -171,12 +172,6 @@ class GameCharacter {
 
 
   /** HELPER METHODS **/
- 
-  void setSize(float widthDimension, float heightDimension) {
-    cWidth = mass*widthDimension;
-    cHeight = mass*heightDimension;
-  }
-  
   float centerOrigin(float origin, float objectSize) {
     return origin - (objectSize/2);
   }
@@ -188,11 +183,16 @@ class GameCharacter {
   float calcLocationY(float y) {
     return y - cHeight;
   }
+ 
+  protected void animateSize(float widthDimension, float heightDimension) {
+    cWidth = mass*widthDimension;
+    cHeight = mass*heightDimension;
+  }
   
-  PVector alignWMillis(PVector speed) {
-    float alignedXPos = speed.x * (millis() - ticksLastUpdate) * 0.05;
-    float alignedYPos = speed.y * (millis() - ticksLastUpdate) * 0.05;
-    PVector alignedSpeed = new PVector(alignedXPos, alignedYPos);
-    return alignedSpeed;
+  private PVector timeSpeedWMillis(PVector speed) {
+    float timedXPos = speed.x * (millis() - ticksLastUpdate) * 0.05;
+    float timedYPos = speed.y * (millis() - ticksLastUpdate) * 0.05;
+    PVector timedSpeed = new PVector(timedXPos, timedYPos);
+    return timedSpeed;
   }
 }
