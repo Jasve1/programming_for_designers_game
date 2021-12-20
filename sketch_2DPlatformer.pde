@@ -18,14 +18,33 @@ float groundBounce = -0.2;
 float worldGravity = 0.8;
 int ticksLastUpdate = 0;
 
+// Animation
+float maxFrames = 28;
+float frameNumber = 1;
+int animationUpdate = millis();
+int durationOneFrame = 10;
+
+PFont ubuntu;
+
 void setup() {
   size(1500, 800);
+  
+  ubuntu = createFont("fonts/Ubuntu-Bold.ttf", 24);
+  textFont(ubuntu);
 }
 
 void draw() {
   background(255);
   
   gameStateManager();
+  
+  // Update animation frames
+  int delta = millis() - animationUpdate;
+  if (delta >= durationOneFrame) {
+    frameNumber++;
+    if (frameNumber > maxFrames) { frameNumber = 1; }
+    animationUpdate += delta;
+  }
   
   // TIMING FIX
   ticksLastUpdate = millis();
@@ -34,12 +53,13 @@ void draw() {
 void gameStateManager() {
   switch(gameState) {
     case TITLE:
+      // TODO: CREATE TITLE MENU WITH ACCESS TO SCOREBOARD
       textSize(128);
       fill(#982C20);
       textAlign(CENTER);
-      text("Hello!", (width/2)-500, (height/2)-200, 1000, 200);
+      text("Hello!", 0, (height/2)-200, width, 200);
       textSize(50);
-      text("Press R to start", (width/2)-250, (height/2), 500, 300);
+      text("Press R to start", 0, (height/2), width, 300);
       break;
     case LEVEL:
       if (level == null) {
@@ -59,20 +79,21 @@ void gameStateManager() {
       }
       break;
     case WIN:
+      // TODO: CREATE SCOREBOARD WITH INPUT FIELD, SORTED BY SCORE
       textSize(128);
       fill(#982C20);
       textAlign(CENTER);
-      text("YOU WON", (width/2)-500, (height/2)-200, 1000, 200);
+      text("YOU WON", 0, (height/2)-200, width, 200);
       textSize(50);
-      text("Press R to try again", (width/2)-250, (height/2), 500, 300);
+      text("Press R to try again", 0, (height/2), width, 300);
       break;
     case GAMEOVER:
       textSize(128);
       fill(#982C20);
       textAlign(CENTER);
-      text("Game Over", (width/2)-500, (height/2)-200, 1000, 200);
+      text("Game Over", 0, (height/2)-200, width, 200);
       textSize(50);
-      text("Press R to restart", (width/2)-250, (height/2), 500, 300);
+      text("Press R to restart", 0, (height/2), width, 300);
       level = null;
       break;
   }

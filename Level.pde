@@ -1,6 +1,7 @@
 class Level {
   private GameObject[] platforms;
   private Enemy[] enemies;
+  private int enemiesDefeated = 0;
   
   Level(int level, int numOfEnemies, int numOfPlatforms) {
     PImage levelImage = loadImage("images/lvl" + level + ".jpg");
@@ -26,11 +27,11 @@ class Level {
         
         // ADD PLATFORMS
         if (averageColor == 0) {
-          platforms[currentPlatform] = new GameObject(tileSize, tileSize, x, y, #6B938C, Type.PLATFORM);
+          platforms[currentPlatform] = new GameObject(tileSize, tileSize, x, y, #6B938C, CollisionType.PLATFORM);
           currentPlatform++;
         }
 
-        // SET PLAYER POSITION
+        // Add PLAYER
         if (pixelColor == color(0,255,0)) {
           player = new Player(130, x, y, #934040);
         }
@@ -40,11 +41,18 @@ class Level {
           enemies[currentEnemy] = new Enemy(x,y);
           currentEnemy++;
         }
+        
+        // TODO: CREATE PORTAL TO NEXT LEVEL
       }
     }
   }
   
   void display() {
+    fill(#000000);
+    textAlign(LEFT);
+    textSize(28);
+    text("Score: "+enemiesDefeated, 30, 50);
+    
     player.display();
 
     for(int i = 0; i < enemies.length; i++) {
@@ -80,9 +88,9 @@ class Level {
       float platformWidth = platforms[i].getPWidth();
       PVector platformLocation = platforms[i].getLocation();
 
-      player.checkCollision(platformHeight, platformWidth, platformLocation, Type.PLATFORM);
+      player.checkCollision(platformHeight, platformWidth, platformLocation, CollisionType.PLATFORM);
       for(int e = 0; e < enemies.length; e++) {
-        enemies[e].checkCollision(platformHeight, platformWidth, platformLocation, Type.PLATFORM);
+        enemies[e].checkCollision(platformHeight, platformWidth, platformLocation, CollisionType.PLATFORM);
       }
     }
   }
@@ -93,18 +101,19 @@ class Level {
       float enemyWidth = enemies[i].getWidth();
       PVector enemyLocation = enemies[i].getLocation();
 
-      player.checkCollision(enemyHeight, enemyWidth, enemyLocation, Type.ENEMY);
+      player.checkCollision(enemyHeight, enemyWidth, enemyLocation, CollisionType.ENEMY);
 
       // Enemies can collide with other enemies potentially destroying them
       for(int e = 0; e < enemies.length; e++) {
         if (e != i) {
-          enemies[e].checkCollision(enemyHeight, enemyWidth, enemyLocation, Type.ENEMY);
+          enemies[e].checkCollision(enemyHeight, enemyWidth, enemyLocation, CollisionType.ENEMY);
         }
       }
     }
   }
   
   private void removeDeadEnemy(int indexOfDead) {
+    enemiesDefeated++;
     Enemy[] tempEnemyList = new Enemy[enemies.length - 1];
     int currentEnemy = 0;
     for(int i = 0; i < enemies.length; i++) {

@@ -8,11 +8,7 @@ class Player extends GameCharacter {
   private color pColor;
 
   // Animation
-  private float maxFrames = 28;
-  private float frameNumber = 1;
   private boolean hasPlayed = false;
-  private int animationUpdate = millis();
-  private int durationOneFrame = 10;
 
   Player(float mass, float x, float y, color colorValue) {
     super(mass, x, y, 1);
@@ -66,6 +62,7 @@ class Player extends GameCharacter {
   void display() {
     fill(pColor);
 
+    // TODO: USE SPRITE SHEET
     initAnimations();
     
     rect(calcLocationX(super.position.x), calcLocationY(super.position.y), super.cWidth, super.cHeight);
@@ -95,16 +92,20 @@ class Player extends GameCharacter {
     if (up && super.isOnGround) {
       hasPlayed = false;
     }
-
-    // Animation frames
-    int delta = millis() - animationUpdate;
-    if (delta >= durationOneFrame) {
-      frameNumber++;
-      if (frameNumber > maxFrames) { frameNumber = 1; }
-      animationUpdate += delta;
-    }
   }
 
+  private void playIdleAnimation() {
+    if (frameNumber == 1) {
+      super.animateSize(0.52, 0.48);
+    } else if (frameNumber == (maxFrames * 0.5)) {
+      super.animateSize(0.51, 0.49);
+    } else if (frameNumber == (maxFrames * 0.75)) {
+      super.animateSize(0.48, 0.52);
+    } else if (frameNumber == maxFrames) {
+      super.animateSize(super.dimension.x, super.dimension.y);
+    }
+  }
+  
   private void playMoveAnimation() {
     if (frameNumber == 1) {
       super.animateSize(0.46, 0.54);
@@ -118,18 +119,6 @@ class Player extends GameCharacter {
       super.animateSize(0.61, 0.39);
     } else if (frameNumber == maxFrames) {
       super.animateSize(0.54, 0.46);
-    }
-  }
-
-  private void playIdleAnimation() {
-    if (frameNumber == 1) {
-      super.animateSize(0.52, 0.48);
-    } else if (frameNumber == (maxFrames * 0.5)) {
-      super.animateSize(0.51, 0.49);
-    } else if (frameNumber == (maxFrames * 0.75)) {
-      super.animateSize(0.48, 0.52);
-    } else if (frameNumber == maxFrames) {
-      super.animateSize(super.dimension.x, super.dimension.y);
     }
   }
 

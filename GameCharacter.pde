@@ -18,7 +18,6 @@ class GameCharacter {
   protected float health;
 
   GameCharacter(float newMass, float x, float y, float newHealth) {
-    // TODO: ADD LIFE VAR TO DETERMIN IF CHARACTER SHOULD DIE
     // Size
     mass = newMass;
     dimension = new PVector(0.5, 0.5);
@@ -40,8 +39,7 @@ class GameCharacter {
   // SET
   void setLocation(PVector newPosition) { position = newPosition; }
 
-  /** Movement Logic **/
-
+  /** MOVEMENT LOGIC **/
   protected void initFriction() {
     if (!right && !left && isOnGround) {
       // Apply friction
@@ -85,8 +83,7 @@ class GameCharacter {
   
   
   /** COLLISION **/
-  
-  void checkCollision(float objectHeight, float objectWidth, PVector objectLocation, Type type) {
+  void checkCollision(float objectHeight, float objectWidth, PVector objectLocation, CollisionType type) {
     float combinedHalfWidths = (cWidth/2) + (objectWidth/2);
     float combinedHalfHeights = (cHeight/2) + (objectHeight/2);
     double horizontalDistance = getHorizontalDistance(position.x, objectLocation.x);

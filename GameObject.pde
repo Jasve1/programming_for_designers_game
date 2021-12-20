@@ -1,12 +1,13 @@
+// TODO: MAYBE CHANGE CLASS NAME TO PLATFORM
 class GameObject {
   private float pWidth, pHeight;
   private color pColor;
   
   private PVector location;
   
-  private Type type;
+  private CollisionType type;
   
-  GameObject(float w, float h, float x, float y, color colorValue, Type newType) {
+  GameObject(float w, float h, float x, float y, color colorValue, CollisionType newType) {
     pWidth = w;
     pHeight = h;
     location = new PVector(x, y);
@@ -18,7 +19,7 @@ class GameObject {
   float getPWidth() { return pWidth; }
   float getPHeight() { return pHeight; }
   PVector getLocation() { return location; }
-  Type getType() { return type; }
+  CollisionType getType() { return type; }
   
   // Set methods
   void setLocation(float x, float y) { location = new PVector(x, y); }
