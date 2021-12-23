@@ -1,30 +1,27 @@
 class Enemy extends GameCharacter {
-  private EnemyState state = EnemyState.PATROL;
+  private EnemyType type;
   private float speed = 2;
-  
-  private PVector[] patrolPoints = null;
+
+  private PVector primaryPosition;
+  private float moveDistance = 200;
   private int targetPosition = 0;
   
   private PVector goToPos = null;
   private PVector dirToPoint = null;
   
-  Enemy(float x, float y) {
+  private boolean isActive = false;
+  
+  Enemy(float x, float y, EnemyType newType) {
     super(130, x, y, 1);
-    patrolPoints = new PVector[] {
-       new PVector(x,y),
-       new PVector(x+200,y)
-    };
-    targetPosition = 1;
+    primaryPosition = new PVector(x,y);
+    type = newType;
   }
   
   void update() {
     // TODO: IMPLEMENT DIFFERENT ENEMY TYPES
-      // ENEMY TYPE: Chaser, stands still untill the player is close.
-      // ENEMY TYPE: Patrol, jumps 3 times then quickly launches to another spot.
-      // ENEMY TYPE: Spike, when something comes close it erupts its spikes.
       // ENEMY TYPE: Archer, shoots deadly projectiles.
     changeState();
-    handleState();
+    initActions();
     
     if (goToPos != null && dirToPoint != null) {
       dirToPoint.normalize();
@@ -42,40 +39,66 @@ class Enemy extends GameCharacter {
   void changeState() {
     PVector dirToPlayer = PVector.sub(player.getLocation(), super.position);
 
-    if (dirToPlayer.magSq() < (300*300)) {
-      state = EnemyState.CHASE;
+    if (dirToPlayer.magSq() < (400*400) || type == EnemyType.PATROLER) {
+      isActive = true;
     } else {
-      state = EnemyState.PATROL;
+      isActive = false;
     }
   }
   
-  void handleState() {
-    switch(state) {
-      case PATROL: {
-        goToPos = patrolPoints[targetPosition];
-        dirToPoint = PVector.sub(goToPos, super.position);
-        
-        if (Math.abs(dirToPoint.x) <= 25) {
-          targetPosition++;
-          if (patrolPoints.length <= targetPosition) {
-            targetPosition = 0;
-          }
-        }
+  void initActions() {
+    if (isActive) {
+      switch (type) {
+        case PATROLER:
+          patrolerAction();
+          break;
+        case CHASER:
+          chaserAction();
+          break;
+        case SPIKE:
+          spikeAction();
+          break;
+        case ARCHER:
+          break;
       }
-      break;
-      case CHASE: {
-        goToPos = player.getLocation();
-        dirToPoint = PVector.sub(goToPos, super.position);
-      }
-      break;
+    } else {
+      super.mass = 130;
+      dirToPoint = PVector.sub(primaryPosition, super.position);
     }
+  }
+  
+  void patrolerAction() {
+    PVector[] patrolPoints = new PVector[] {
+       new PVector(primaryPosition.x,primaryPosition.y),
+       new PVector(primaryPosition.x+moveDistance,primaryPosition.y)
+    };
+    goToPos = patrolPoints[targetPosition];
+    dirToPoint = PVector.sub(goToPos, super.position);
+    
+    if (Math.abs(dirToPoint.x) <= 25) {
+      targetPosition++;
+      if (patrolPoints.length <= targetPosition) {
+        targetPosition = 0;
+      }
+    }
+  }
+  
+  void chaserAction() {
+    goToPos = player.getLocation();
+    dirToPoint = PVector.sub(goToPos, super.position);
+  }
+  
+  void spikeAction() {
+    super.mass = 200;
   }
   
   void display() {
     fill(0);
     
-    if (state == EnemyState.CHASE) {
+    if (isActive && type == EnemyType.CHASER) {
       playChaseAnimation();
+    } else if (isActive && type == EnemyType.SPIKE) {
+      playSpikeAnimation();
     } else if (super.isOnGround) {
       playMoveAnimation();
     }
@@ -97,6 +120,25 @@ class Enemy extends GameCharacter {
     } else if (frameNumber == maxFrames) {
       fill(#831010);
       super.animateSize(0.6, 0.4);
+    }
+  }
+  
+  private void playSpikeAnimation() {
+    if (frameNumber == 1) {
+      fill(0);
+      super.animateSize(0.35, 0.35);
+    } else if (frameNumber == (maxFrames * 0.25)) {
+      fill(#0E3105);
+      super.animateSize(0.4, 0.4);
+    } else if (frameNumber == (maxFrames * 0.5)) {
+      fill(#1A5809);
+      super.animateSize(0.5, 0.5);
+    } else if (frameNumber == (maxFrames * 0.75)) {
+      fill(#2A930D);
+      super.animateSize(0.55, 0.55);
+    } else if (frameNumber == maxFrames) {
+      fill(#0E3105);
+      super.animateSize(0.4, 0.4);
     }
   }
   

@@ -1,4 +1,7 @@
 class Player extends GameCharacter {
+  // Controls
+  private boolean left, right, up, down, space;
+
   // Movement
   private float xAcceleration = 0;
   private float speed = 0.2;
@@ -20,14 +23,51 @@ class Player extends GameCharacter {
   void update() {
     initHorizontalMovement();
     super.initGravity();
-    super.initFriction();
+    if (!right && !left) { super.initFriction(); }
     super.initSpeedLimit();
     super.initBounce();
     initJumping();
     super.applyMovement();
-    // TODO: ADD LOSE CONDITION, EX. IF HEALTH == 0 : GAMESTATE = GAMEOVER
     if (super.health == 0) {
       gameState = GameState.GAMEOVER;
+    }
+  }
+  
+  /** CONTROLS **/
+  void buttonPressed(int input) {
+    switch(input) {
+      case 37: //left
+        left = true;
+        break;
+      case 39: //right
+        right = true;
+        break;
+      case 38: //up
+        up = true;
+        break;
+      case 40: //down
+        down = true;
+        break;
+    }
+  }
+  
+  void buttonReleased(int input) {
+    switch(input) {
+      case 37: //left
+        left = false;
+        break;
+      case 39: //right
+        right = false;
+        break;
+      case 38: //up
+        up = false;
+        break;
+      case 40: //down
+        down = false;
+        break;
+      case 32: //space
+        space = false;
+        break;
     }
   }
   

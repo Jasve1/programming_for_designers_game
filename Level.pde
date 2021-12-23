@@ -1,7 +1,8 @@
 class Level {
   private GameObject[] platforms;
   private Enemy[] enemies;
-  private int enemiesDefeated = 0;
+  private GameObject portal;
+  private int tileSize = 50;
   
   Level(int level, int numOfEnemies, int numOfPlatforms) {
     PImage levelImage = loadImage("images/lvl" + level + ".jpg");
@@ -15,7 +16,6 @@ class Level {
   private void renderLevel(PImage levelImage) {
     color pixelColor = color(0,0,0);
     int averageColor = 0;
-    int tileSize = 50;
 
     int currentPlatform = 0;
     int currentEnemy = 0;
@@ -27,8 +27,13 @@ class Level {
         
         // ADD PLATFORMS
         if (averageColor == 0) {
-          platforms[currentPlatform] = new GameObject(tileSize, tileSize, x, y, #6B938C, CollisionType.PLATFORM);
+          platforms[currentPlatform] = new GameObject(tileSize, tileSize, calcLocationX(x), calcLocationY(y), #6B938C, CollisionType.BLOCK);
           currentPlatform++;
+        }
+        
+        // ADD PORTAL
+        if (pixelColor == color(255,255,0)) {
+          portal = new GameObject(25, 25, x, y, #FCBE1F, CollisionType.PORTAL);
         }
 
         // Add PLAYER
@@ -38,7 +43,16 @@ class Level {
         
         // ADD ENEMIES
         if (pixelColor == color(255,0,0)) {
-          enemies[currentEnemy] = new Enemy(x,y);
+          enemies[currentEnemy] = new Enemy(x, y, EnemyType.PATROLER);
+          currentEnemy++;
+        } else if (pixelColor == color(186,34,23)) {
+          enemies[currentEnemy] = new Enemy(x, y, EnemyType.CHASER);
+          currentEnemy++;
+        } else if (pixelColor == color(168,0,0)) {
+          enemies[currentEnemy] = new Enemy(x, y, EnemyType.SPIKE);
+          currentEnemy++;
+        } else if (pixelColor == color(89,0,0)) {
+          enemies[currentEnemy] = new Enemy(x, y, EnemyType.SPIKE);
           currentEnemy++;
         }
         
@@ -48,12 +62,9 @@ class Level {
   }
   
   void display() {
-    fill(#000000);
-    textAlign(LEFT);
-    textSize(28);
-    text("Score: "+enemiesDefeated, 30, 50);
-    
     player.display();
+    
+    portal.display();
 
     for(int i = 0; i < enemies.length; i++) {
       enemies[i].display();
@@ -62,6 +73,11 @@ class Level {
     for(int i = 0; i < platforms.length; i++) {
       platforms[i].display();
     }
+    
+    fill(#000000);
+    textAlign(LEFT);
+    textSize(28);
+    text("Score: "+score, 30, 50);
   }
   
   void update() {
@@ -71,6 +87,7 @@ class Level {
       enemies[i].update();
     }
     
+    checkPortalCollision();
     checkPlatformCollision();
     checkEnemyCollision();
     
@@ -82,15 +99,23 @@ class Level {
     }
   }
   
+  private void checkPortalCollision() {
+    float portalHeight = portal.getPHeight();
+    float portalWidth = portal.getPWidth();
+    PVector portalLocation = portal.getLocation();
+
+    player.checkCollision(portalHeight, portalWidth, portalLocation, CollisionType.PORTAL);
+  }
+  
   private void checkPlatformCollision() {
     for(int i = 0; i < platforms.length; i++) {
       float platformHeight = platforms[i].getPHeight();
       float platformWidth = platforms[i].getPWidth();
       PVector platformLocation = platforms[i].getLocation();
 
-      player.checkCollision(platformHeight, platformWidth, platformLocation, CollisionType.PLATFORM);
+      player.checkCollision(platformHeight, platformWidth, platformLocation, CollisionType.BLOCK);
       for(int e = 0; e < enemies.length; e++) {
-        enemies[e].checkCollision(platformHeight, platformWidth, platformLocation, CollisionType.PLATFORM);
+        enemies[e].checkCollision(platformHeight, platformWidth, platformLocation, CollisionType.BLOCK);
       }
     }
   }
@@ -113,7 +138,11 @@ class Level {
   }
   
   private void removeDeadEnemy(int indexOfDead) {
-    enemiesDefeated++;
+    if (enemies[indexOfDead].getCauseOfDeath() == CauseOfDeath.ENEMY) {
+      score += 2;
+    } else {
+      score++;
+    }
     Enemy[] tempEnemyList = new Enemy[enemies.length - 1];
     int currentEnemy = 0;
     for(int i = 0; i < enemies.length; i++) {
@@ -123,5 +152,14 @@ class Level {
       }
     }
     enemies = tempEnemyList;
+  }
+  
+  /** HELPER METHODS **/
+  float calcLocationX(float x) {
+    return x + (tileSize * 0.5);
+  }
+
+  float calcLocationY(float y) {
+    return y + tileSize;
   }
 }

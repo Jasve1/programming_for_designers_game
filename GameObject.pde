@@ -24,10 +24,6 @@ class GameObject {
   // Set methods
   void setLocation(float x, float y) { location = new PVector(x, y); }
   
-  void changeColor(color newColor) {
-    pColor = newColor;
-  }
-  
   void display() {
     noStroke();
     fill(pColor);

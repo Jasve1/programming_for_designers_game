@@ -3,5 +3,7 @@ static public enum GameState {
   TITLE,
   LEVEL,
   LEVELCHANGE,
-  WIN
+  WIN,
+  SCOREBOARD,
+  SAVESCORE
 }

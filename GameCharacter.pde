@@ -16,6 +16,7 @@ class GameCharacter {
   
   // Health
   protected float health;
+  private CauseOfDeath causeOfDeath;
 
   GameCharacter(float newMass, float x, float y, float newHealth) {
     // Size
@@ -35,13 +36,11 @@ class GameCharacter {
   float getWidth() { return cWidth; }
   float getHeight() { return cHeight; }
   float getHealth() { return health; }
-  
-  // SET
-  void setLocation(PVector newPosition) { position = newPosition; }
+  CauseOfDeath getCauseOfDeath() { return causeOfDeath; }
 
   /** MOVEMENT LOGIC **/
   protected void initFriction() {
-    if (!right && !left && isOnGround) {
+    if (isOnGround) {
       // Apply friction
       velocity.x *= groundFriction;
     }
@@ -59,6 +58,10 @@ class GameCharacter {
   protected void initGravity() {
     // Apply gravity
     velocity.y += gravity;
+    if (position.y >= height && health > 0) {
+      health--;
+      causeOfDeath = CauseOfDeath.FALL;
+    }
   }
 
   protected void initBounce() {
@@ -67,11 +70,10 @@ class GameCharacter {
       velocity.x *= groundBounce;
       position.x = halfWidth;
     }
-    // Bounce off bottom screen
-    if (position.y >= height) {
-      velocity.y *= groundBounce;
-      position.y = height;
-      isOnGround = true;
+    // Bounce off right screen
+    if (position.x >= width-halfWidth) {
+      velocity.x *= groundBounce;
+      position.x = width-halfWidth;
     }
   }
   
@@ -118,11 +120,15 @@ class GameCharacter {
       }
       
       switch(type) {
-        case PLATFORM:
+        case BLOCK:
           handlePlaformCollisions(objectHeight, objectWidth, objectLocation);
           break;
         case ENEMY:
           if (health > 0) { health--; }
+          causeOfDeath = CauseOfDeath.ENEMY;
+          break;
+        case PORTAL:
+          gameState = GameState.LEVELCHANGE;
           break;
       }
     }

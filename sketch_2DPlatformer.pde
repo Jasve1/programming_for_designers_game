@@ -3,34 +3,45 @@ Level level = null;
 
 GameState gameState = GameState.TITLE;
 int currentLevel = 1;
-int maxLevels = 5;
+int maxLevels = 1;
 HashMap<Integer,Integer> numOfEnemies = new HashMap<Integer,Integer>() {{
-  put(1, 3);
+  put(1, 2);
+  put(2, 3);
+  put(3, 4);
 }};
 HashMap<Integer,Integer> numOfPlatforms = new HashMap<Integer,Integer>() {{
-  put(1, 41);
+  put(1, 28);
+  put(2, 50);
+  put(3, 69);
 }};
 
 // World Variables
-boolean left, right, up, down, space;
 float groundFriction = 0.9;
 float groundBounce = -0.2;
 float worldGravity = 0.8;
 int ticksLastUpdate = 0;
+int score = 0;
 
 // Animation
-float maxFrames = 28;
+float maxFrames = 32;
 float frameNumber = 1;
 int animationUpdate = millis();
 int durationOneFrame = 10;
 
 PFont ubuntu;
 
+String textInput = "";
+Button submitButton;
+Scoreboard scoreboard;
+
 void setup() {
-  size(1500, 800);
+  size(1500, 850);
   
   ubuntu = createFont("fonts/Ubuntu-Bold.ttf", 24);
   textFont(ubuntu);
+  
+  submitButton = new Button((width/2)-100, (height/2)+90, "Save score", ButtonType.SUBMIT);
+  scoreboard = new Scoreboard();
 }
 
 void draw() {
@@ -79,13 +90,38 @@ void gameStateManager() {
       }
       break;
     case WIN:
-      // TODO: CREATE SCOREBOARD WITH INPUT FIELD, SORTED BY SCORE
-      textSize(128);
-      fill(#982C20);
+      // Input box
+      fill(#F5F4F2);
+      stroke(#5F5C54);
+      rect((width/2)-200, (height/2), 400, 70);
+
       textAlign(CENTER);
-      text("YOU WON", 0, (height/2)-200, width, 200);
+      fill(#982C20);
+
+      textSize(128);
+      text("YOU WON", 0, (height/2)-250, width, 200);
+
       textSize(50);
-      text("Press R to try again", 0, (height/2), width, 300);
+      text("Write your name", 0, (height/2)-70, width, 300);
+
+      // Input text
+      textSize(40);
+      text(textInput, (width/2)-190, (height/2)+10, 390, 60);
+      
+      submitButton.display();
+      
+      fill(#982C20);
+      textSize(50);
+      text("Score: "+score, 0, (height/2)+150, width, 300);
+      break;
+    case SAVESCORE:
+      scoreboard.saveNewScore(textInput, score);
+      textInput = "";
+      score = 0;
+      gameState = GameState.SCOREBOARD;
+      break;
+    case SCOREBOARD:
+      scoreboard.display();
       break;
     case GAMEOVER:
       textSize(128);
@@ -95,50 +131,32 @@ void gameStateManager() {
       textSize(50);
       text("Press R to restart", 0, (height/2), width, 300);
       level = null;
+      score = 0;
       break;
+  }
+}
+
+void mouseReleased() {
+  if (gameState == GameState.WIN) {
+    submitButton.handleMouseClick();
   }
 }
 
 void keyPressed() {
-  switch(keyCode) {
-    case 37: //left
-      left = true;
-      break;
-    case 39: //right
-      right = true;
-      break;
-    case 38: //up
-      up = true;
-      break;
-    case 40: //down
-      down = true;
-      break;
-    case 32: //space
-      space = true;
-      break;
+  if (player != null) { player.buttonPressed(keyCode); }
+  if (gameState == GameState.WIN) {
+    if (keyCode == 8) {
+      textInput = textInput.substring( 0, textInput.length()-1 );
+    } else {
+      textInput = textInput + key;
+    }
   }
 }
 
 void keyReleased() {
-  switch(keyCode) {
-    case 37: //left
-      left = false;
-      break;
-    case 39: //right
-      right = false;
-      break;
-    case 38: //up
-      up = false;
-    case 40: //down
-      down = false;
-      break;
-    case 32: //space
-      space = false;
-      break;
-    case 82: //r
-      gameState = GameState.LEVEL;
-      break;
-    default:
-      println("Key was released but nothing happened");
+  if (player != null) { player.buttonReleased(keyCode); }
+  
+  if (gameState == GameState.GAMEOVER || gameState == GameState.TITLE && keyCode == 82) {
+    gameState = GameState.LEVEL;
   }
 }

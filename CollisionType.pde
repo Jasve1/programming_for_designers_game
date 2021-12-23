@@ -1,4 +1,5 @@
 static public enum CollisionType {
-  PLATFORM,
-  ENEMY
+  BLOCK,
+  ENEMY,
+  PORTAL
 }
