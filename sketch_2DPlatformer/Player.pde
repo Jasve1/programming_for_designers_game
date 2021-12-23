@@ -7,6 +7,9 @@ class Player extends GameCharacter {
   private float speed = 0.2;
   private float jumpForce = -20;
   
+  //direction
+  private boolean isFacingLeft = false;
+  
   // Color
   private color pColor;
 
@@ -19,6 +22,9 @@ class Player extends GameCharacter {
     // Player color
     pColor = colorValue;
   }
+  
+  //get
+    boolean getIsFacingLeft() {return isFacingLeft;}
   
   void update() {
     initHorizontalMovement();
@@ -77,8 +83,10 @@ class Player extends GameCharacter {
     // Horizontal Movement
     if (left && !right) {
       xAcceleration = -speed;
+      isFacingLeft = true;
     } else if (right && !left) {
       xAcceleration = speed;
+      isFacingLeft = false;
     } else {
       xAcceleration = 0;
     }
