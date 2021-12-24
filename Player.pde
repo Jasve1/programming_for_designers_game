@@ -6,30 +6,38 @@ class Player extends GameCharacter {
   private float xAcceleration = 0;
   private float speed = 0.2;
   private float jumpForce = -20;
-  
+
   //direction
   private boolean isFacingLeft = false;
-  
+
   // Color
   private color pColor;
 
   // Animation
   private boolean hasPlayed = false;
 
+  //projectile
+  private Projectile projectile;
+
   Player(float mass, float x, float y, color colorValue) {
     super(mass, x, y, 1);
-    
+    projectile = new Projectile(new PVector(x,y));
+
     // Player color
     pColor = colorValue;
   }
-  
+
   //get
-    boolean getIsFacingLeft() {return isFacingLeft;}
-  
+  boolean getIsFacingLeft() {
+    return isFacingLeft;
+  }
+
   void update() {
     initHorizontalMovement();
     super.initGravity();
-    if (!right && !left) { super.initFriction(); }
+    if (!right && !left) { 
+      super.initFriction();
+    }
     super.initSpeedLimit();
     super.initBounce();
     initJumping();
@@ -37,48 +45,54 @@ class Player extends GameCharacter {
     if (super.health == 0) {
       gameState = GameState.GAMEOVER;
     }
+    projectile.update();
+    //projectile.projectileReturn();
+    if(space) {projectile.moveProjectile();}
   }
-  
+
   /** CONTROLS **/
   void buttonPressed(int input) {
     switch(input) {
-      case 37: //left
-        left = true;
-        break;
-      case 39: //right
-        right = true;
-        break;
-      case 38: //up
-        up = true;
-        break;
-      case 40: //down
-        down = true;
-        break;
+    case 37: //left
+      left = true;
+      break;
+    case 39: //right
+      right = true;
+      break;
+    case 38: //up
+      up = true;
+      break;
+    case 40: //down
+      down = true;
+      break;
+    case 32: //space
+      space = true;
+      break;
     }
   }
-  
+
   void buttonReleased(int input) {
     switch(input) {
-      case 37: //left
-        left = false;
-        break;
-      case 39: //right
-        right = false;
-        break;
-      case 38: //up
-        up = false;
-        break;
-      case 40: //down
-        down = false;
-        break;
-      case 32: //space
-        space = false;
-        break;
+    case 37: //left
+      left = false;
+      break;
+    case 39: //right
+      right = false;
+      break;
+    case 38: //up
+      up = false;
+      break;
+    case 40: //down
+      down = false;
+      break;
+    case 32: //space
+      space = false;
+      break;
     }
   }
-  
+
   /** MOVEMENT **/
-  
+
   private void initHorizontalMovement() {
     // Horizontal Movement
     if (left && !right) {
@@ -93,7 +107,7 @@ class Player extends GameCharacter {
 
     super.velocity.x += xAcceleration;
   }
-  
+
   private void initJumping() {
     // Jumping
     if (up && super.isOnGround) {
@@ -109,13 +123,14 @@ class Player extends GameCharacter {
 
   void display() {
     fill(pColor);
+    projectile.display();
 
     // TODO: USE SPRITE SHEET
     initAnimations();
-    
+
     rect(calcLocationX(super.position.x), calcLocationY(super.position.y), super.cWidth, super.cHeight);
   }
- 
+
 
   /** ANIMATIONS **/
 
@@ -136,7 +151,7 @@ class Player extends GameCharacter {
       // Reset
       super.animateSize(super.dimension.x, super.dimension.y);
     }
-    
+
     if (up && super.isOnGround) {
       hasPlayed = false;
     }
@@ -153,7 +168,7 @@ class Player extends GameCharacter {
       super.animateSize(super.dimension.x, super.dimension.y);
     }
   }
-  
+
   private void playMoveAnimation() {
     if (frameNumber == 1) {
       super.animateSize(0.46, 0.54);

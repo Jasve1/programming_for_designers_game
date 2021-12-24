@@ -1,44 +1,41 @@
 // TODO: CREATE PROJECTILE CLASS THAT CAN BE USED FOR BOTH PLAYER AND ENEMY
-// TODO: CREATE PROJECTILE CLASS THAT CAN BE USED FOR BOTH PLAYER AND ENEMY
-public class projectile {
-  private PVector location, initLocation, dist; //starting postion of projectile.
-  private PVector velocity; //speed of projectile.
-  private float w, h; //size of projectile.
+public class Projectile {
+  private PVector location, initLocation; //starting postion of projectile.
+  private PVector velocity = new PVector(0, 0); //update location of projectile.
+  private float w, h; //size of projectile; 
+  private float speed = 2; //speed of projectile.
   private color col;//color of projectile.
   private float projectileRange = 200;
+  private boolean isActive = false;
 
   //constructor
-  projectile () {
+  Projectile (PVector temp_initLocation) {
+    initLocation = temp_initLocation;
     location = initLocation;
-  }
-
-  //Shoot: when space pressed, shoot a projectile- in the main program.
-  void Projectile() {
-    initLocation = new PVector(player.getLocation().x, player.getLocation().y);
   }
 
   //The horizontal movement of a projectile.
   void moveProjectile() { 
-    //player faces right side.
-    if (!player.getIsFacingLeft()) {
-      velocity = new PVector(2, 0);
+    //if projectile is not active.
+    if (!isActive) {
+      //player faces right side.
+      if (!player.getIsFacingLeft()) {
+        velocity.x= speed;
+      }
+      //player faces left side.
+      else if (player.getIsFacingLeft()) {
+        velocity.x= -speed;
+      }
     }
-    //player faces left side.
-    else if (player.getIsFacingLeft()) {
-      velocity = new PVector(-2, 0);
-    }
-    location.add(velocity);
   }
 
 
   //check condtion after travling a distance of X pixels.
   void projectileReturn() {
-    dist = new PVector (player.getLocation().x, player.getLocation().y);
-    dist.sub(location.x, location.y);
-    dist.normalize();
-    dist.mult(2);
-    
     if ((location.x > initLocation.x + projectileRange) || (location.x < initLocation.x - projectileRange)) {
+      PVector dirToPlayer = PVector.sub(player.getLocation(), location);
+      dirToPlayer.normalize();
+      velocity = PVector.mult(dirToPlayer, speed);
     }
   }
 
@@ -49,8 +46,13 @@ public class projectile {
     col = color (0, 255, 0);
     stroke(0);
     fill(col);
-    ellipse (initLocation.x, initLocation.y, w, h);
+    ellipse (location.x, location.y, w, h);
     strokeWeight (2);
     fill(220, 0, 0);
+  }
+
+  void update () {
+    location = player.getLocation();
+    location.add(velocity);
   }
 }
