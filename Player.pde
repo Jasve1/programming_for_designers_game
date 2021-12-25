@@ -21,7 +21,6 @@ class Player extends GameCharacter {
 
   Player(float mass, float x, float y, color colorValue) {
     super(mass, x, y, 1);
-    projectile = new Projectile(new PVector(x,y));
 
     // Player color
     pColor = colorValue;
@@ -45,9 +44,12 @@ class Player extends GameCharacter {
     if (super.health == 0) {
       gameState = GameState.GAMEOVER;
     }
-    projectile.update();
-    //projectile.projectileReturn();
-    if(space) {projectile.moveProjectile();}
+    if (projectile != null) {
+      projectile.update();
+    }
+    else if(space) {
+      projectile = new Projectile(this);
+    }
   }
 
   /** CONTROLS **/
@@ -123,7 +125,6 @@ class Player extends GameCharacter {
 
   void display() {
     fill(pColor);
-    projectile.display();
 
     // TODO: USE SPRITE SHEET
     initAnimations();

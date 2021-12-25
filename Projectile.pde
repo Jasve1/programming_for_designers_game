@@ -3,40 +3,53 @@ public class Projectile {
   private PVector location, initLocation; //starting postion of projectile.
   private PVector velocity = new PVector(0, 0); //update location of projectile.
   private float w, h; //size of projectile; 
-  private float speed = 2; //speed of projectile.
+  private float speed = 5; //speed of projectile.
   private color col;//color of projectile.
-  private float projectileRange = 200;
-  private boolean isActive = false;
+  private float projectileRange = 400;
+  private boolean isReturning = false;
+  private Player player;
 
   //constructor
-  Projectile (PVector temp_initLocation) {
-    initLocation = temp_initLocation;
-    location = initLocation;
+  Projectile (Player player) {
+    this.player = player;
+    PVector playerPosition = player.getLocation();
+    location = new PVector(playerPosition.x, playerPosition.y);
+    println("Projectile initlocation: " + initLocation);
+    initLocation = new PVector(playerPosition.x, playerPosition.y);
+    setVelocity();
+    display();
   }
 
   //The horizontal movement of a projectile.
-  void moveProjectile() { 
-    //if projectile is not active.
-    if (!isActive) {
-      //player faces right side.
-      if (!player.getIsFacingLeft()) {
-        velocity.x= speed;
-      }
-      //player faces left side.
-      else if (player.getIsFacingLeft()) {
-        velocity.x= -speed;
-      }
+  void setVelocity() { 
+    //player faces left side.
+    if (player.getIsFacingLeft()) {
+      velocity.x = -speed;
+    }
+    //player faces right side.
+    else {
+      velocity.x = speed;
     }
   }
 
 
   //check condtion after travling a distance of X pixels.
   void projectileReturn() {
-    if ((location.x > initLocation.x + projectileRange) || (location.x < initLocation.x - projectileRange)) {
+    println("initLocation.x + range: " + initLocation.x + projectileRange);
+    if (passedRange() || isReturning) {
+      isReturning = true;
+      setVelocityToPlayer();
+    }
+  }
+  
+  boolean passedRange() {
+    return (location.x > initLocation.x + projectileRange) || (location.x < initLocation.x - projectileRange);
+  }
+ 
+  void setVelocityToPlayer() {
       PVector dirToPlayer = PVector.sub(player.getLocation(), location);
       dirToPlayer.normalize();
       velocity = PVector.mult(dirToPlayer, speed);
-    }
   }
 
   //Projectile display: shape, color and location.  
@@ -52,7 +65,9 @@ public class Projectile {
   }
 
   void update () {
-    location = player.getLocation();
+    projectileReturn();
     location.add(velocity);
+    display();
+    println("Projectile location: after addition: " + location);
   }
 }
