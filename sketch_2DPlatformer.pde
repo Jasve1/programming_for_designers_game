@@ -3,7 +3,7 @@ Level level = null;
 
 GameState gameState = GameState.TITLE;
 int currentLevel = 1;
-int maxLevels = 1;
+int maxLevels = 3;
 HashMap<Integer,Integer> numOfEnemies = new HashMap<Integer,Integer>() {{
   put(1, 2);
   put(2, 3);
@@ -32,6 +32,9 @@ PFont ubuntu;
 
 String textInput = "";
 Button submitButton;
+Button startButton;
+Button titleButton;
+Button scoreButton;
 Scoreboard scoreboard;
 
 void setup() {
@@ -41,6 +44,9 @@ void setup() {
   textFont(ubuntu);
   
   submitButton = new Button((width/2)-100, (height/2)+90, "Save score", ButtonType.SUBMIT);
+  startButton = new Button((width/2)-100, (height/2), "Start Game", ButtonType.START);
+  titleButton = new Button(50, 50, "Go to tile menu", ButtonType.TITLE);
+  scoreButton = new Button((width/2)-100, (height/2)+90, "Scoreboard", ButtonType.SEESCORE);
   scoreboard = new Scoreboard();
 }
 
@@ -69,8 +75,9 @@ void gameStateManager() {
       fill(#982C20);
       textAlign(CENTER);
       text("Hello!", 0, (height/2)-200, width, 200);
-      textSize(50);
-      text("Press R to start", 0, (height/2), width, 300);
+      
+      startButton.display();
+      scoreButton.display();
       break;
     case LEVEL:
       if (level == null) {
@@ -122,6 +129,7 @@ void gameStateManager() {
       break;
     case SCOREBOARD:
       scoreboard.display();
+      titleButton.display();
       break;
     case GAMEOVER:
       textSize(128);
@@ -140,6 +148,9 @@ void mouseReleased() {
   if (gameState == GameState.WIN) {
     submitButton.handleMouseClick();
   }
+  titleButton.handleMouseClick();
+  startButton.handleMouseClick();
+  scoreButton.handleMouseClick();
 }
 
 void keyPressed() {
@@ -147,6 +158,8 @@ void keyPressed() {
   if (gameState == GameState.WIN) {
     if (keyCode == 8) {
       textInput = textInput.substring( 0, textInput.length()-1 );
+    } else if (keyCode == 10) {
+      gameState = GameState.SAVESCORE;
     } else {
       textInput = textInput + key;
     }
@@ -156,7 +169,7 @@ void keyPressed() {
 void keyReleased() {
   if (player != null) { player.buttonReleased(keyCode); }
   
-  if (gameState == GameState.GAMEOVER || gameState == GameState.TITLE && keyCode == 82) {
+  if (gameState == GameState.GAMEOVER && keyCode == 82) {
     gameState = GameState.LEVEL;
   }
 }
