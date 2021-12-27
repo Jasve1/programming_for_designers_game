@@ -1,8 +1,8 @@
 // TODO: CREATE PROJECTILE CLASS THAT CAN BE USED FOR BOTH PLAYER AND ENEMY
-public class Projectile extends GameObject {
+public class Projectile {
   private PVector location, initLocation; //starting postion of projectile.
   private PVector velocity = new PVector(0, 0); //update location of projectile.
-  private static final float w = 15, h = 15; //size of projectile; 
+  private float w = 15, h = 15; //size of projectile; 
   private float speed = 5; //speed of projectile.
   private color col;//color of projectile.
   private float projectileRange = 400;
@@ -11,10 +11,10 @@ public class Projectile extends GameObject {
 
   //constructor
   Projectile (Player player) {
-    super(w, h, player.getLocation().x, player.getLocation().y, color (0, 255, 0), CollisionType.PROJECTILE);
     this.player = player;
     PVector playerPosition = player.getLocation();
-    location = new PVector(playerPosition.x, playerPosition.y); 
+    location = new PVector(playerPosition.x, playerPosition.y);
+    println("Projectile initlocation: " + initLocation);
     initLocation = new PVector(playerPosition.x, playerPosition.y);
     setVelocity();
     display();
@@ -55,7 +55,7 @@ public class Projectile extends GameObject {
   void display() {
     stroke(0);
     fill(col);
-    ellipse (location.x, location.y, w, h);
+    ellipse (location.x, location.y-20, w, h);
     strokeWeight (2);
     fill(220, 0, 0);
   }

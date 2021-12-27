@@ -130,8 +130,6 @@ class GameCharacter {
         case PORTAL:
           gameState = GameState.LEVELCHANGE;
           break;
-        case PROJECTILE:
-          break;
       }
     }
     return collision;

@@ -90,7 +90,6 @@ class Level {
     checkPortalCollision();
     checkPlatformCollision();
     checkEnemyCollision();
-    checkProjectileCollision();
     
     // Remove dead enemies
     for(int i = 0; i < enemies.length; i++) {
@@ -100,9 +99,6 @@ class Level {
     }
   }
   
-  private void checkProjectileCollision() {
-    player.checkCollisionWithProjectile();
-  }
   
   private void checkPortalCollision() {
     float portalHeight = portal.getPHeight();
