@@ -85,7 +85,7 @@ class GameCharacter {
   
   
   /** COLLISION **/
-  void checkCollision(float objectHeight, float objectWidth, PVector objectLocation, CollisionType type) {
+  boolean checkCollision(float objectHeight, float objectWidth, PVector objectLocation, CollisionType type) {
     float combinedHalfWidths = (cWidth/2) + (objectWidth/2);
     float combinedHalfHeights = (cHeight/2) + (objectHeight/2);
     double horizontalDistance = getHorizontalDistance(position.x, objectLocation.x);
@@ -130,8 +130,11 @@ class GameCharacter {
         case PORTAL:
           gameState = GameState.LEVELCHANGE;
           break;
+        case PROJECTILE:
+          break;
       }
     }
+    return collision;
   }
   
   private double getHorizontalDistance(float x1, float x2) {

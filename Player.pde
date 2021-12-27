@@ -26,6 +26,24 @@ class Player extends GameCharacter {
     pColor = colorValue;
   }
 
+  void checkCollisionWithProjectile() {
+    if (projectile == null) {
+      return;
+    }
+    if (!projectile.isReturning) {
+      return;
+    }
+    float projectileHeight = projectile.getPHeight();
+    float projectileWidth = projectile.getPWidth();
+    PVector projectileLocation = projectile.getLocation();
+
+    boolean collided = checkCollision(projectileHeight, projectileWidth, projectileLocation, CollisionType.PROJECTILE);
+    if (collided) {
+      println("collided with projectile!");
+      //rojectile = null
+    }
+  }
+
   //get
   boolean getIsFacingLeft() {
     return isFacingLeft;
@@ -46,8 +64,7 @@ class Player extends GameCharacter {
     }
     if (projectile != null) {
       projectile.update();
-    }
-    else if(space) {
+    } else if (space) {
       projectile = new Projectile(this);
     }
   }

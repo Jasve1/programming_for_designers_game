@@ -1,5 +1,6 @@
 static public enum CollisionType {
   BLOCK,
   ENEMY,
-  PORTAL
+  PORTAL,
+  PROJECTILE
 }
