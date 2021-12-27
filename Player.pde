@@ -26,16 +26,6 @@ class Player extends GameCharacter {
     pColor = colorValue;
   }
 
-  /*void checkCollisionWithProjectile() {
-    
-    if (projectile == null) {
-      return;
-    }
-    if (!projectile.isReturning) {
-      return;
-      projectile = null;
-    }
-  }*/
 
   //get
   boolean getIsFacingLeft() {
@@ -57,6 +47,9 @@ class Player extends GameCharacter {
     }
     if (projectile != null) {
       projectile.update();
+      if (projectile.hasReturned()) {
+        projectile = null;
+      }
     } else if (space) {
       projectile = new Projectile(this);
     }
