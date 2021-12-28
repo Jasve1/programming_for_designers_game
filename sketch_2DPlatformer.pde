@@ -3,7 +3,7 @@ Level level = null;
 
 GameState gameState = GameState.TITLE;
 int currentLevel = 1;
-int maxLevels = 1;
+int maxLevels = 3;
 HashMap<Integer,Integer> numOfEnemies = new HashMap<Integer,Integer>() {{
   put(1, 2);
   put(2, 3);
