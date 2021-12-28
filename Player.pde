@@ -16,15 +16,15 @@ class Player extends GameCharacter {
   // Animation
   private boolean hasPlayed = false;
 
-  //projectile
-  private Projectile projectile;
-
   Player(float mass, float x, float y, color colorValue) {
     super(mass, x, y, 1);
 
     // Player color
     pColor = colorValue;
   }
+  
+  // GET
+  boolean getSpace() { return space; }
 
 
   //get
@@ -44,14 +44,6 @@ class Player extends GameCharacter {
     super.applyMovement();
     if (super.health == 0) {
       gameState = GameState.GAMEOVER;
-    }
-    if (projectile != null) {
-      projectile.update();
-      if (projectile.hasReturned()) {
-        projectile = null;
-      }
-    } else if (space) {
-      projectile = new Projectile(this);
     }
   }
 

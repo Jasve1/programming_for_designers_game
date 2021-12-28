@@ -3,7 +3,7 @@ Level level = null;
 
 GameState gameState = GameState.TITLE;
 int currentLevel = 1;
-int maxLevels = 1;
+int maxLevels = 3;
 HashMap<Integer,Integer> numOfEnemies = new HashMap<Integer,Integer>() {{
   put(1, 2);
   put(2, 3);
@@ -17,7 +17,7 @@ HashMap<Integer,Integer> numOfPlatforms = new HashMap<Integer,Integer>() {{
 
 // World Variables
 float groundFriction = 0.9;
-float groundBounce = -0.2;
+float groundBounce = -0.3;
 float worldGravity = 0.8;
 int ticksLastUpdate = 0;
 int score = 0;

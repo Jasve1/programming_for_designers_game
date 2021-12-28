@@ -130,6 +130,10 @@ class GameCharacter {
         case PORTAL:
           gameState = GameState.LEVELCHANGE;
           break;
+        case PROJECTILE:
+          handlePlaformCollisions(objectHeight, objectWidth, objectLocation);
+          handleProjectileCollisions(objectHeight, objectWidth, objectLocation);
+          break;
       }
     }
     return collision;
@@ -164,6 +168,24 @@ class GameCharacter {
           velocity.y *= groundBounce;
           position.y = objectLocation.y - objectHeight;
           isOnGround = true;
+          break;
+      }
+  }
+  
+  private void handleProjectileCollisions(float objectHeight, float objectWidth, PVector objectLocation) {
+    float collisionForce = 20;
+      switch(collisionSide) {
+        case RIGHT:
+          velocity.x = -collisionForce;
+          break;
+        case LEFT:
+          velocity.x = collisionForce;
+          break;
+        case TOP:
+          velocity.y = collisionForce;
+          break;
+        case BOTTOM:
+          velocity.y = -collisionForce;
           break;
       }
   }

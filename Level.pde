@@ -4,6 +4,9 @@ class Level {
   private GameObject portal;
   private int tileSize = 50;
   
+  //projectile
+  private Projectile projectile;
+  
   Level(int level, int numOfEnemies, int numOfPlatforms) {
     PImage levelImage = loadImage("images/lvl" + level + ".jpg");
 
@@ -83,6 +86,16 @@ class Level {
   void update() {
     player.update();
     
+    if (projectile != null) {
+      projectile.update();
+      checkProjectileCollision();
+      if (projectile.hasReturned()) {
+        projectile = null;
+      }
+    } else if (player.getSpace()) {
+      projectile = new Projectile(player);
+    }
+    
     for(int i = 0; i < enemies.length; i++) {
       enemies[i].update();
     }
@@ -99,6 +112,15 @@ class Level {
     }
   }
   
+  private void checkProjectileCollision() {
+    float projectileHeight = projectile.getHeight();
+    float projectileWidth = projectile.getWidth();
+    PVector projectileLocation = projectile.getLocation();
+
+    for(int e = 0; e < enemies.length; e++) {
+      enemies[e].checkCollision(projectileHeight, projectileWidth, projectileLocation, CollisionType.PROJECTILE);
+    }
+  }
   
   private void checkPortalCollision() {
     float portalHeight = portal.getPHeight();

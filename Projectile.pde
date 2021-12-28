@@ -2,9 +2,9 @@
 public class Projectile {
   private PVector location, initLocation; //starting postion of projectile.
   private PVector velocity = new PVector(0, 0); //update location of projectile.
-  private float w, h; //size of projectile; 
-  private float speed = 5; //speed of projectile.
-  private color col;//color of projectile.
+  private float w = 20;
+  private float h = 20;
+  private float speed = 7; //speed of projectile.
   private float projectileRange = 400;
   private boolean isReturning = false;
   private Player player;
@@ -19,6 +19,11 @@ public class Projectile {
     setDirection();
     display();
   }
+  
+  // GET
+  PVector getLocation() { return location; }
+  float getWidth() { return w; }
+  float getHeight() { return h; }
 
   //The horizontal movement of a projectile.
   void setDirection() { 
@@ -35,7 +40,7 @@ public class Projectile {
 
   //check condtion after travling a distance of X pixels.
   void projectileReturn() {
-    if (passedRange() || isReturning) {
+    if (passedRange()) {
       isReturning = true;
       setVelocityToPlayer();
     }
@@ -54,18 +59,13 @@ public class Projectile {
   boolean hasReturned() {
     PVector playerPosition = player.getLocation();
     float d = dist(playerPosition.x, playerPosition.y,location.x, location.y);
-    println("dist is: " + d);
-    return d < 5 && isReturning;
+    return d < 40 && isReturning;
   }
 
   //Projectile display: shape, color and location.  
   void display() {
-    col = color(0, 255, 0);
-    w = 15;
-    h = 15;
-    stroke(0);
-    fill(col);
-    ellipse (location.x, location.y-20, w, h);
+    fill(#934040);
+    ellipse (location.x, location.y-30, w, h);
     fill(200, 0, 0);
   }
  
