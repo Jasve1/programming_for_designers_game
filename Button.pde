@@ -28,6 +28,15 @@ class Button {
         case SUBMIT:
           gameState = GameState.SAVESCORE;
           break;
+        case START:
+          gameState = GameState.LEVEL;
+          break;
+        case SEESCORE:
+          gameState = GameState.SCOREBOARD;
+          break;
+        case TITLE:
+          gameState = GameState.TITLE;
+          break;
       }
     }
   }

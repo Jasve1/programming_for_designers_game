@@ -1,4 +1,3 @@
-// TODO: CREATE PROJECTILE CLASS THAT CAN BE USED FOR BOTH PLAYER AND ENEMY
 public class Projectile {
   private PVector location, initLocation; //starting postion of projectile.
   private PVector velocity = new PVector(0, 0); //update location of projectile.

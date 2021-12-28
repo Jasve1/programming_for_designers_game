@@ -1,3 +1,6 @@
 static public enum ButtonType {
-  SUBMIT
+  SUBMIT,
+  START,
+  SEESCORE,
+  TITLE
 }
