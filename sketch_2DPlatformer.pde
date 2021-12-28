@@ -3,7 +3,7 @@ Level level = null;
 
 GameState gameState = GameState.TITLE;
 int currentLevel = 1;
-int maxLevels = 3;
+int maxLevels = 1;
 HashMap<Integer,Integer> numOfEnemies = new HashMap<Integer,Integer>() {{
   put(1, 2);
   put(2, 3);
@@ -139,6 +139,7 @@ void gameStateManager() {
       text("Press R to restart", 0, (height/2), width, 300);
       level = null;
       score = 0;
+      titleButton.display();
       break;
   }
 }
@@ -146,10 +147,11 @@ void gameStateManager() {
 void mouseReleased() {
   if (gameState == GameState.WIN) {
     submitButton.handleMouseClick();
+  } else if (gameState == GameState.TITLE) {
+    startButton.handleMouseClick();
+    scoreButton.handleMouseClick();
   }
   titleButton.handleMouseClick();
-  startButton.handleMouseClick();
-  scoreButton.handleMouseClick();
 }
 
 void keyPressed() {
