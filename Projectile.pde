@@ -71,7 +71,15 @@ public class Projectile {
 
   void update () {
     projectileReturn();
-    location.add(velocity);
+    PVector timedVelocity = timeSpeedWMillis(velocity);
+    location.add(timedVelocity);
     display();
+  }
+  
+  private PVector timeSpeedWMillis(PVector speed) {
+    float timedXPos = speed.x * (millis() - ticksLastUpdate) * 0.05;
+    float timedYPos = speed.y * (millis() - ticksLastUpdate) * 0.05;
+    PVector timedSpeed = new PVector(timedXPos, timedYPos);
+    return timedSpeed;
   }
 }

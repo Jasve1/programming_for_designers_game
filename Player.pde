@@ -89,8 +89,10 @@ class Player extends GameCharacter {
     // Horizontal Movement
     if (left && !right) {
       xAcceleration = -speed;
+      isFacingLeft = true;
     } else if (right && !left) {
       xAcceleration = speed;
+      isFacingLeft = false;
     } else {
       xAcceleration = 0;
     }

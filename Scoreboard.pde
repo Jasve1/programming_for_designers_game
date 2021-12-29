@@ -10,13 +10,17 @@ class Scoreboard {
     text("Scoreboard", 0, 50, width, 200);
 
     textSize(50);
-    float yPos = 100;
+    float lineHeight = 100;
+    int visibleScores = 10;
+    if (scoreData.size() < visibleScores) {
+      visibleScores = scoreData.size();
+    }
     for (int i = 0; i < scoreData.size(); i++) {
       JSONObject scoreItem = scoreData.getJSONObject(i); 
       String name = scoreItem.getString("name");
       int score = scoreItem.getInt("score");
       
-      text(name+": "+str(score), 0, yPos*i+250, width, 100);
+      text(name+": "+str(score), 0, lineHeight*i+250, width, 100);
     }
   }
   
