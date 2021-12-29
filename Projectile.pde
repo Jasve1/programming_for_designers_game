@@ -39,7 +39,7 @@ public class Projectile {
 
   //check condtion after travling a distance of X pixels.
   void projectileReturn() {
-    if (passedRange()) {
+    if (passedRange() || isReturning) {
       isReturning = true;
       setVelocityToPlayer();
     }
