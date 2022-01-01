@@ -16,18 +16,20 @@ HashMap<Integer,Integer> numOfPlatforms = new HashMap<Integer,Integer>() {{
   put(3, 69);
 }};
 
+PImage bg;
+
 // World Variables
-float groundFriction = 0.9;
+float groundFriction = 0.8;
 float groundBounce = -0.3;
 float worldGravity = 0.8;
 int ticksLastUpdate = 0;
 int score = 0;
 
 // Animation
-float maxFrames = 32;
-float frameNumber = 1;
+int maxFrames = 10;
+int frameNumber = 1;
 int animationUpdate = millis();
-int durationOneFrame = 10;
+int durationOneFrame = 24;
 
 PFont ubuntu;
 
@@ -42,6 +44,8 @@ void setup() {
   size(1500, 850);
   ps = new ParticleSystem(new PVector(width/2, height/2));
   
+  bg = loadImage("images/bg.jpg");
+  
   ubuntu = createFont("fonts/Ubuntu-Bold.ttf", 24);
   textFont(ubuntu);
   
@@ -53,7 +57,7 @@ void setup() {
 }
 
 void draw() {
-  background(255);
+  background(bg);
   
   gameStateManager();
   
@@ -135,14 +139,14 @@ void gameStateManager() {
       titleButton.display();
       break;
     case GAMEOVER:
+      level = null;
+      score = 0;
       textSize(128);
       fill(#982C20);
       textAlign(CENTER);
       text("Game Over", 0, (height/2)-200, width, 200);
       textSize(50);
       text("Press R to restart", 0, (height/2), width, 300);
-      level = null;
-      score = 0;
       titleButton.display();
       break;
   }

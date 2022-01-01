@@ -132,7 +132,7 @@ class GameCharacter {
           break;
         case PROJECTILE:
           handlePlaformCollisions(objectHeight, objectWidth, objectLocation);
-          handleProjectileCollisions(objectHeight, objectWidth, objectLocation);
+          handleProjectileCollisions();
           break;
       }
     }
@@ -172,7 +172,7 @@ class GameCharacter {
       }
   }
   
-  private void handleProjectileCollisions(float objectHeight, float objectWidth, PVector objectLocation) {
+  private void handleProjectileCollisions() {
     float collisionForce = 20;
       switch(collisionSide) {
         case RIGHT:
@@ -189,13 +189,6 @@ class GameCharacter {
           break;
       }
   }
-  
-  /** ANIMATIONS **/
-  
-  // TODO: ADD DAMAGE ANIMATION THAT TAKES COLOR PARAMS
-  
-  // TODO: DEATH ANIMATION USING PARTICLE EFFECT
-
 
   /** HELPER METHODS **/
   float centerOrigin(float origin, float objectSize) {

@@ -10,17 +10,18 @@ class Player extends GameCharacter {
   //direction
   private boolean isFacingLeft = false;
 
-  // Color
-  private color pColor;
-
   // Animation
   private boolean hasPlayed = false;
+  private PImage idleImage;
+  private PImage moveImage;
+  private PImage animationImage;
 
-  Player(float mass, float x, float y, color colorValue) {
+  Player(float mass, float x, float y) {
     super(mass, x, y, 1);
 
-    // Player color
-    pColor = colorValue;
+    // Animation
+    idleImage = loadImage("images/Ninja Frog/Idle (32x32).png");
+    moveImage = loadImage("images/Ninja Frog/Run (32x32).png");
   }
   
   // GET
@@ -114,12 +115,19 @@ class Player extends GameCharacter {
   /** VISUALS **/
 
   void display() {
-    fill(pColor);
-
-    // TODO: USE SPRITE SHEET
     initAnimations();
 
-    rect(calcLocationX(super.position.x), calcLocationY(super.position.y), super.cWidth, super.cHeight);
+    if (animationImage != null) {
+      if (isFacingLeft) {
+        pushMatrix();
+        translate(super.cWidth,0);
+        scale(-1,1);
+        image(animationImage, -calcLocationX(super.position.x), calcLocationY(super.position.y), super.cWidth, super.cHeight);
+        popMatrix();
+      } else {
+        image(animationImage, calcLocationX(super.position.x), calcLocationY(super.position.y), super.cWidth, super.cHeight);
+      }
+    }
   }
 
 
@@ -149,6 +157,7 @@ class Player extends GameCharacter {
   }
 
   private void playIdleAnimation() {
+    animationImage = idleImage.get(frameNumber*32, 0, 32, 32);
     if (frameNumber == 1) {
       super.animateSize(0.52, 0.48);
     } else if (frameNumber == (maxFrames * 0.5)) {
@@ -161,6 +170,7 @@ class Player extends GameCharacter {
   }
 
   private void playMoveAnimation() {
+    animationImage = moveImage.get(frameNumber*32, 0, 32, 32);
     if (frameNumber == 1) {
       super.animateSize(0.46, 0.54);
     } else if (frameNumber == (maxFrames * 0.15)) {

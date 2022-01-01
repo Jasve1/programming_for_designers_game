@@ -11,15 +11,28 @@ class Enemy extends GameCharacter {
   
   private boolean isActive = false;
   
+  private boolean isFacingLeft = false;
+  private PImage idleChaserImage;
+  private PImage moveChaserImage;
+  private PImage movePatrolerImage;
+  private PImage idleSpikeImage;
+  private PImage activeSpikeImage;
+  private PImage animationImage;
+  
   Enemy(float x, float y, EnemyType newType) {
     super(130, x, y, 1);
     primaryPosition = new PVector(x,y);
     type = newType;
+    
+    // Animation
+    idleChaserImage = loadImage("images/AngryPig/Idle (36x30).png");
+    moveChaserImage = loadImage("images/AngryPig/Run (36x30).png");
+    movePatrolerImage = loadImage("images/Turtle/Idle 1 (44x26).png");
+    idleSpikeImage = loadImage("images/Skull/Idle 2 (52x54).png");
+    activeSpikeImage = loadImage("images/Skull/Idle 1 (52x54).png");
   }
   
   void update() {
-    // TODO: IMPLEMENT DIFFERENT ENEMY TYPES
-      // ENEMY TYPE: Archer, shoots deadly projectiles.
     changeState();
     initActions();
     
@@ -40,6 +53,7 @@ class Enemy extends GameCharacter {
     PVector dirToPlayer = PVector.sub(player.getLocation(), super.position);
 
     if (dirToPlayer.magSq() < (400*400) || type == EnemyType.PATROLER) {
+      isFacingLeft = player.getLocation().x > super.position.x;
       isActive = true;
     } else {
       isActive = false;
@@ -58,12 +72,11 @@ class Enemy extends GameCharacter {
         case SPIKE:
           spikeAction();
           break;
-        case ARCHER:
-          break;
       }
     } else {
       super.mass = 130;
       dirToPoint = PVector.sub(primaryPosition, super.position);
+      isFacingLeft = super.position.x < primaryPosition.x;
     }
   }
   
@@ -74,6 +87,8 @@ class Enemy extends GameCharacter {
     };
     goToPos = patrolPoints[targetPosition];
     dirToPoint = PVector.sub(goToPos, super.position);
+    
+    isFacingLeft = super.position.x < goToPos.x;
     
     if (Math.abs(dirToPoint.x) <= 25) {
       targetPosition++;
@@ -93,56 +108,80 @@ class Enemy extends GameCharacter {
   }
   
   void display() {
-    fill(0);
-    
-    if (isActive && type == EnemyType.CHASER) {
-      playChaseAnimation();
-    } else if (isActive && type == EnemyType.SPIKE) {
-      playSpikeAnimation();
-    } else if (super.isOnGround) {
-      playMoveAnimation();
+    initAnimations();
+    if (animationImage != null) {
+      if (isFacingLeft) {
+        pushMatrix();
+        translate(super.cWidth,0);
+        scale(-1,1);
+        image(animationImage, -calcLocationX(super.position.x), calcLocationY(super.position.y), super.cWidth, super.cHeight);
+        popMatrix();
+      } else {
+        image(animationImage, calcLocationX(super.position.x), calcLocationY(super.position.y), super.cWidth, super.cHeight);
+      }
     }
-    
-    rect(calcLocationX(super.position.x), calcLocationY(super.position.y), super.cWidth, super.cHeight);
   }
   
   /** ANIMATION **/
+  void initAnimations() {
+    if(isActive) {
+      switch (type) {
+        case PATROLER:
+          animationImage = movePatrolerImage.get(calcFrameNumber(movePatrolerImage.width, 44)*44, 0, 44, 26);
+          playIdleAnimation();
+          break;
+        case CHASER:
+          playChaseAnimation();
+          break;
+        case SPIKE:
+          playSpikeAnimation();
+          break;
+      }
+    } else {
+      switch (type) {
+        case PATROLER:
+          animationImage = movePatrolerImage.get(calcFrameNumber(movePatrolerImage.width, 44)*44, 0, 44, 26);
+          break;
+        case CHASER:
+          animationImage = idleChaserImage.get(calcFrameNumber(idleChaserImage.width, 36)*36, 0, 36, 30);
+          break;
+        case SPIKE:
+          animationImage = idleSpikeImage.get(calcFrameNumber(idleSpikeImage.width, 52)*52, 0, 52, 54);
+          break;
+      }
+      playIdleAnimation();
+    }
+  }
+  
   private void playChaseAnimation() {
+    animationImage = moveChaserImage.get(calcFrameNumber(idleChaserImage.width, 36)*36, 0, 36, 30);
     if (frameNumber == 1) {
-      fill(0);
       super.animateSize(0.5, 0.5);
     } else if (frameNumber == (maxFrames * 0.35)) {
-      fill(#831010);
       super.animateSize(0.6, 0.4);
     } else if (frameNumber == (maxFrames * 0.7)) {
-      fill(#C91010);
       super.animateSize(0.65, 0.35);
     } else if (frameNumber == maxFrames) {
-      fill(#831010);
       super.animateSize(0.6, 0.4);
     }
   }
   
   private void playSpikeAnimation() {
+    animationImage = activeSpikeImage.get(calcFrameNumber(activeSpikeImage.width, 52)*52, 0, 52, 54);
     if (frameNumber == 1) {
-      fill(0);
       super.animateSize(0.35, 0.35);
     } else if (frameNumber == (maxFrames * 0.25)) {
-      fill(#0E3105);
       super.animateSize(0.4, 0.4);
     } else if (frameNumber == (maxFrames * 0.5)) {
-      fill(#1A5809);
       super.animateSize(0.5, 0.5);
     } else if (frameNumber == (maxFrames * 0.75)) {
-      fill(#2A930D);
       super.animateSize(0.55, 0.55);
     } else if (frameNumber == maxFrames) {
-      fill(#0E3105);
       super.animateSize(0.4, 0.4);
     }
   }
   
-  private void playMoveAnimation() {
+  private void playIdleAnimation() {
     if (frameNumber == 1) {
       super.animateSize(0.6, 0.4);
     } else if (frameNumber == (maxFrames * 0.15)) {
@@ -156,5 +195,12 @@ class Enemy extends GameCharacter {
     } else if (frameNumber == maxFrames) {
       super.animateSize(0.57, 0.43);
     }
+  }
+  
+  /* HELPER METHODS */
+  int calcFrameNumber(float imageWidth, float spriteSize) {
+    float numOfSprites = (imageWidth/spriteSize)-1;
+    float frameDifference = numOfSprites/maxFrames;
+    return int(frameNumber*frameDifference);
   }
 }

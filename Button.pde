@@ -13,6 +13,7 @@ class Button {
   }
   
   void display() {
+    noStroke();
     fill(#982C20);
     rect(position.x, position.y, bWidth, bHeight);
     

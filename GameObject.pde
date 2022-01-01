@@ -7,12 +7,24 @@ class GameObject {
   
   private CollisionType type;
   
+  private int spriteSize;
+  private PImage idleImage;
+  private PImage animationImage;
+  
   GameObject(float w, float h, float x, float y, color colorValue, CollisionType newType) {
     pWidth = w;
     pHeight = h;
     location = new PVector(x, y);
     pColor = colorValue;
     type = newType;
+    
+    if (type == CollisionType.PORTAL) {
+      idleImage = loadImage("images/coin(16X16).png");
+      spriteSize = 16;
+    } else if (type == CollisionType.BLOCK) {
+      idleImage = loadImage("images/Terrain (32x32).png");
+      spriteSize = 32;
+    }
   }
   
   // Get methods
@@ -25,12 +37,23 @@ class GameObject {
   void setLocation(float x, float y) { location = new PVector(x, y); }
   
   void display() {
-    noStroke();
-    fill(pColor);
-    rect(calcLocationX(location.x), calcLocationY(location.y), pWidth, pHeight);
+    if (idleImage != null) {
+      if (type == CollisionType.PORTAL) {
+        animationImage = idleImage.get(calcFrameNumber(idleImage.width, spriteSize)*spriteSize, 0, spriteSize, spriteSize);
+      } else if (type == CollisionType.BLOCK) {
+        animationImage = idleImage.get(spriteSize, 0, spriteSize, spriteSize);
+      }
+      image(animationImage, calcLocationX(location.x), calcLocationY(location.y), pWidth, pHeight);
+    }
   }
   
   /** HELPER METHODS **/
+  int calcFrameNumber(float imageWidth, float spriteSize) {
+    float numOfSprites = (imageWidth/spriteSize)-1;
+    float frameDifference = numOfSprites/maxFrames;
+    return int(frameNumber*frameDifference);
+  }
+
   float calcLocationX(float x) {
     return x - (pWidth * 0.5);
   }
