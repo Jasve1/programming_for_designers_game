@@ -1,3 +1,5 @@
+//The particle system and the particle classes are based on the code of Daniel Shiffman: https://processing.org/examples/simpleparticlesystem.html
+
 class Particle {
   PVector position; //postion of a particle
   PVector velocity; //velocity of a particle
