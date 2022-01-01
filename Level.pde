@@ -30,13 +30,13 @@ class Level {
         
         // ADD PLATFORMS
         if (averageColor == 0) {
-          platforms[currentPlatform] = new GameObject(tileSize, tileSize, calcLocationX(x), calcLocationY(y), #6B938C, CollisionType.BLOCK);
+          platforms[currentPlatform] = new GameObject(tileSize, tileSize, calcLocationX(x), calcLocationY(y), CollisionType.BLOCK);
           currentPlatform++;
         }
         
         // ADD PORTAL
         if (pixelColor == color(255,255,0)) {
-          portal = new GameObject(40, 40, x, y, #ffffff, CollisionType.PORTAL);
+          portal = new GameObject(40, 40, x, y, CollisionType.PORTAL);
         }
 
         // Add PLAYER

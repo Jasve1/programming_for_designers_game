@@ -42,7 +42,7 @@ Scoreboard scoreboard;
 
 void setup() {
   size(1500, 850);
-  ps = new ParticleSystem(new PVector(width/2, height/2));
+  ps = new ParticleSystem(new PVector(width/2, height/2+10));
   
   bg = loadImage("images/bg.jpg");
   

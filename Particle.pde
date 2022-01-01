@@ -1,16 +1,20 @@
 //The particle system and the particle classes are based on the code of Daniel Shiffman: https://processing.org/examples/simpleparticlesystem.html
 
 class Particle {
-  PVector position; //postion of a particle
-  PVector velocity; //velocity of a particle
-  PVector acceleration; //change in velocity of particle
-  float lifespan; //duration of particle on screen
+  private PVector position; //postion of a particle
+  private PVector velocity; //velocity of a particle
+  private PVector acceleration; //change in velocity of particle
+  private float lifespan; //duration of particle on screen
+  private float r,g,b;
 
   Particle(PVector p) {
     acceleration = new PVector(random(-0.05, 0.05), random(-0.07, 0.02));
     velocity = new PVector(random(-1, 1), random(-2, 0));
     position = p.copy(); //instantiating particles in the constructor vector p.
     lifespan = 255.0;
+    r = random(0,255);
+    g = random(0,255);
+    b = random(0,255);
   }
 
   void run() {
@@ -28,8 +32,7 @@ class Particle {
 
   // Method to display
   void display() {
-    stroke(150, 0, 0, lifespan);
-    fill(150, 0, 0, lifespan);
+    fill(r, g, b, lifespan);
     ellipse(position.x, position.y, lifespan*0.5, lifespan*0.5);
   }
 

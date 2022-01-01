@@ -1,7 +1,5 @@
-// TODO: MAYBE CHANGE CLASS NAME TO PLATFORM
 class GameObject {
   private float pWidth, pHeight;
-  private color pColor;
   
   private PVector location;
   
@@ -11,11 +9,10 @@ class GameObject {
   private PImage idleImage;
   private PImage animationImage;
   
-  GameObject(float w, float h, float x, float y, color colorValue, CollisionType newType) {
+  GameObject(float w, float h, float x, float y, CollisionType newType) {
     pWidth = w;
     pHeight = h;
     location = new PVector(x, y);
-    pColor = colorValue;
     type = newType;
     
     if (type == CollisionType.PORTAL) {

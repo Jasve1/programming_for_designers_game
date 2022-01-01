@@ -1,6 +1,6 @@
 class ParticleSystem {
-  ArrayList<Particle> particles;
-  PVector origin;
+  private ArrayList<Particle> particles;
+  private PVector origin;
 
   ParticleSystem(PVector position) {
     origin = position;

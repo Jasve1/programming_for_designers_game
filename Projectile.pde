@@ -16,7 +16,6 @@ public class Projectile {
     this.player = player;
     PVector playerPosition = player.getLocation();
     location = new PVector(playerPosition.x, playerPosition.y);
-    //println("Projectile initlocation: " + initLocation);
     initLocation = new PVector(playerPosition.x, playerPosition.y);
     setDirection();
     
