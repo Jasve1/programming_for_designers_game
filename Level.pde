@@ -36,7 +36,7 @@ class Level {
         
         // ADD PORTAL
         if (pixelColor == color(255,255,0)) {
-          portal = new GameObject(25, 25, x, y, #FCBE1F, CollisionType.PORTAL);
+          portal = new GameObject(40, 40, x, y, #ffffff, CollisionType.PORTAL);
         }
 
         // Add PLAYER
@@ -54,15 +54,16 @@ class Level {
         } else if (pixelColor == color(168,0,0)) {
           enemies[currentEnemy] = new Enemy(x, y, EnemyType.SPIKE);
           currentEnemy++;
-        } else if (pixelColor == color(89,0,0)) {
-          enemies[currentEnemy] = new Enemy(x, y, EnemyType.SPIKE);
-          currentEnemy++;
         }
       }
     }
   }
   
   void display() {
+    if (projectile != null) {
+      projectile.display();
+    }
+
     player.display();
     
     portal.display();

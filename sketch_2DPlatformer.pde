@@ -15,6 +15,8 @@ HashMap<Integer,Integer> numOfPlatforms = new HashMap<Integer,Integer>() {{
   put(3, 69);
 }};
 
+PImage bg;
+
 // World Variables
 float groundFriction = 0.8;
 float groundBounce = -0.3;
@@ -40,6 +42,8 @@ Scoreboard scoreboard;
 void setup() {
   size(1500, 850);
   
+  bg = loadImage("images/bg.jpg");
+  
   ubuntu = createFont("fonts/Ubuntu-Bold.ttf", 24);
   textFont(ubuntu);
   
@@ -51,7 +55,7 @@ void setup() {
 }
 
 void draw() {
-  background(255);
+  background(bg);
   
   gameStateManager();
   

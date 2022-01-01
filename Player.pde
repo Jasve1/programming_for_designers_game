@@ -115,12 +115,8 @@ class Player extends GameCharacter {
   /** VISUALS **/
 
   void display() {
-    fill(#ffffff);
-
-    // TODO: USE SPRITE SHEET
     initAnimations();
 
-    rect(calcLocationX(super.position.x), calcLocationY(super.position.y), super.cWidth, super.cHeight);
     if (animationImage != null) {
       if (isFacingLeft) {
         pushMatrix();

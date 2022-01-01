@@ -7,6 +7,9 @@ public class Projectile {
   private float projectileRange = 400;
   private boolean isReturning = false;
   private Player player;
+  
+  private PImage idleImage;
+  private PImage animationImage;
 
   //constructor
   Projectile (Player player) {
@@ -16,7 +19,8 @@ public class Projectile {
     //println("Projectile initlocation: " + initLocation);
     initLocation = new PVector(playerPosition.x, playerPosition.y);
     setDirection();
-    display();
+    
+    idleImage = loadImage("images/bulb(32X32).png");
   }
   
   // GET
@@ -63,9 +67,10 @@ public class Projectile {
 
   //Projectile display: shape, color and location.  
   void display() {
-    fill(#934040);
-    ellipse (location.x, location.y-30, w, h);
-    fill(200, 0, 0);
+    if (idleImage != null) {
+      animationImage = idleImage.get(calcFrameNumber(idleImage.width, 32)*32, 0, 32, 32);
+      image(animationImage, calcLocationX(location.x), calcLocationY(location.y-30), w+10, h+10);
+    }
   }
  
 
@@ -73,13 +78,27 @@ public class Projectile {
     projectileReturn();
     PVector timedVelocity = timeSpeedWMillis(velocity);
     location.add(timedVelocity);
-    display();
   }
   
+  /* HELPER METHODS */
   private PVector timeSpeedWMillis(PVector speed) {
     float timedXPos = speed.x * (millis() - ticksLastUpdate) * 0.05;
     float timedYPos = speed.y * (millis() - ticksLastUpdate) * 0.05;
     PVector timedSpeed = new PVector(timedXPos, timedYPos);
     return timedSpeed;
+  }
+  
+  int calcFrameNumber(float imageWidth, float spriteSize) {
+    float numOfSprites = (imageWidth/spriteSize)-1;
+    float frameDifference = numOfSprites/maxFrames;
+    return int(frameNumber*frameDifference);
+  }
+  
+  float calcLocationX(float x) {
+    return x - (w * 0.5);
+  }
+
+  float calcLocationY(float y) {
+    return y - (h * 0.5);
   }
 }
