@@ -41,7 +41,7 @@ class Level {
 
         // Add PLAYER
         if (pixelColor == color(0,255,0)) {
-          player = new Player(130, x, y, #934040);
+          player = new Player(130, x, y);
         }
         
         // ADD ENEMIES
@@ -58,8 +58,6 @@ class Level {
           enemies[currentEnemy] = new Enemy(x, y, EnemyType.SPIKE);
           currentEnemy++;
         }
-        
-        // TODO: CREATE PORTAL TO NEXT LEVEL
       }
     }
   }
