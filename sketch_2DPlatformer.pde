@@ -89,7 +89,7 @@ void gameStateManager() {
       break;
     case LEVELCHANGE:
       level = null;
-      if (currentLevel < 2) {
+      if (currentLevel < maxLevels) {
         currentLevel++;
         gameState = GameState.LEVEL;
       } else {
