@@ -1,5 +1,6 @@
 Player player;
 Level level = null;
+ParticleSystem ps;
 
 GameState gameState = GameState.TITLE;
 int currentLevel = 1;
@@ -39,6 +40,7 @@ Scoreboard scoreboard;
 
 void setup() {
   size(1500, 850);
+  ps = new ParticleSystem(new PVector(width/2, height/2));
   
   ubuntu = createFont("fonts/Ubuntu-Bold.ttf", 24);
   textFont(ubuntu);
@@ -87,7 +89,7 @@ void gameStateManager() {
       break;
     case LEVELCHANGE:
       level = null;
-      if (currentLevel < maxLevels) {
+      if (currentLevel < 2) {
         currentLevel++;
         gameState = GameState.LEVEL;
       } else {
@@ -97,6 +99,8 @@ void gameStateManager() {
       break;
     case WIN:
       // Input box
+      ps.addParticle();
+      ps.run();
       fill(#F5F4F2);
       stroke(#5F5C54);
       rect((width/2)-200, (height/2), 400, 70);
