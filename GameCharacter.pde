@@ -89,16 +89,16 @@ class GameCharacter {
   boolean checkCollision(float objectHeight, float objectWidth, PVector objectLocation, CollisionType type) {
     float combinedHalfWidths = (cWidth/2) + (objectWidth/2);
     float combinedHalfHeights = (cHeight/2) + (objectHeight/2);
-    double horizontalDistance = getHorizontalDistance(position.x, objectLocation.x);
-    double verticalDistance = getVerticalDistance(centerOrigin(position.y, cHeight), centerOrigin(objectLocation.y, objectHeight));
+    float horizontalDistance = getHorizontalDistance(position.x, objectLocation.x);
+    float verticalDistance = getVerticalDistance(centerOrigin(position.y, cHeight), centerOrigin(objectLocation.y, objectHeight));
     
     boolean collision = verticalDistance <= combinedHalfHeights && horizontalDistance <= combinedHalfWidths;
     
     if (collision) {
       // Detect collision side
       float xCollisionBuffer = 1; // Without this player gets stuck when sliding across multiple platforms.
-      float overlapX = (combinedHalfWidths - (float)horizontalDistance) + xCollisionBuffer;
-      float overlapY = combinedHalfHeights - (float)verticalDistance;
+      float overlapX = (combinedHalfWidths - horizontalDistance) + xCollisionBuffer;
+      float overlapY = combinedHalfHeights - verticalDistance;
       
       if (overlapX >= overlapY) {
         // Vertical Collision (Y)
@@ -143,16 +143,8 @@ class GameCharacter {
     return collision;
   }
   
-  private double getHorizontalDistance(float x1, float x2) {
-    float xDistance = x1 - x2;
-    
-    return Math.sqrt(Math.pow(xDistance, 2));
-  }
-  private double getVerticalDistance(float y1, float y2) {
-    float yDistance = y1 - y2;
-    
-    return Math.sqrt(Math.pow(yDistance, 2));
-  }
+  private float getHorizontalDistance(float x1, float x2) { return Math.abs(x1 - x2); }
+  private float getVerticalDistance(float y1, float y2) { return Math.abs(y1 - y2); }
   
   private void stopCollidedElement(float objectHeight, float objectWidth, PVector objectLocation) {
       switch(collisionSide) {
