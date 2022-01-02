@@ -43,7 +43,7 @@ int score = 0;
 int maxFrames = 10;
 int frameNumber = 1;
 int animationUpdate = millis();
-int durationOneFrame = 48;
+int durationOneFrame = 1000/24; // 24 frames per second
 
 PFont ubuntu;
 
