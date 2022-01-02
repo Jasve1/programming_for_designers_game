@@ -27,7 +27,7 @@ class Particle {
     velocity.add(acceleration);
     PVector timedVelocity = timeSpeedWMillis(velocity);
     position.add(timedVelocity);
-    lifespan -= 15/score;
+    lifespan -= 20/score;
   }
 
   // Method to display
