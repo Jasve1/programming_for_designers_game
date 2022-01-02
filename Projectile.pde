@@ -1,8 +1,8 @@
 public class Projectile {
   private PVector location, initLocation; //starting postion of projectile.
   private PVector velocity = new PVector(0, 0); //update location of projectile.
-  private float w = 20;
-  private float h = 20;
+  private float w = 30;
+  private float h = 30;
   private float speed = 7; //speed of projectile.
   private float projectileRange = 400;
   private boolean isReturning = false;
@@ -68,7 +68,7 @@ public class Projectile {
   void display() {
     if (idleImage != null) {
       animationImage = idleImage.get(calcFrameNumber(idleImage.width, 32)*32, 0, 32, 32);
-      image(animationImage, calcLocationX(location.x), calcLocationY(location.y-30), w+10, h+10);
+      image(animationImage, calcLocationX(location.x), calcLocationY(location.y-30), w+5, h+5);
     }
   }
  

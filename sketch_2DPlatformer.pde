@@ -4,16 +4,22 @@ ParticleSystem ps;
 
 GameState gameState = GameState.TITLE;
 int currentLevel = 1;
-int maxLevels = 3;
+int maxLevels = 6;
 HashMap<Integer,Integer> numOfEnemies = new HashMap<Integer,Integer>() {{
   put(1, 2);
-  put(2, 3);
-  put(3, 4);
+  put(2, 2);
+  put(3, 3);
+  put(4, 3);
+  put(5, 2);
+  put(6, 4);
 }};
 HashMap<Integer,Integer> numOfPlatforms = new HashMap<Integer,Integer>() {{
   put(1, 28);
-  put(2, 50);
-  put(3, 69);
+  put(2, 26);
+  put(3, 33);
+  put(4, 50);
+  put(5, 29);
+  put(6, 69);
 }};
 
 PImage bg;
