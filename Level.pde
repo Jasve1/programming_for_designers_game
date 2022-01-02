@@ -118,6 +118,7 @@ class Level {
 
     for(int e = 0; e < enemies.length; e++) {
       boolean hasCollided = enemies[e].checkCollision(projectileHeight, projectileWidth, projectileLocation, CollisionType.PROJECTILE);
+      // Return projectile when collided with enemy;
       if (hasCollided) { projectile.setIsReturning(hasCollided); }
     }
   }

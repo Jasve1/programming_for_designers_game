@@ -96,8 +96,6 @@ class GameCharacter {
     
     boolean collision = verticalDistance <= combinedHalfHeights && horizontalDistance <= combinedHalfWidths;
     
-    collisionType = type;
-    
     if (collision) {
       // Detect collision side
       float xCollisionBuffer = 1; // Without this player gets stuck when sliding across multiple platforms.
@@ -123,6 +121,8 @@ class GameCharacter {
           collisionSide = CollisionSides.LEFT;
         }
       }
+      
+      collisionType = type;
       
       switch(type) {
         case BLOCK:

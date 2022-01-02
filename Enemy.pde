@@ -10,6 +10,7 @@ class Enemy extends GameCharacter {
   private PVector dirToPoint = null;
   
   private boolean isActive = false;
+  private boolean isHit = false;
   
   private boolean isFacingLeft = false;
   private PImage idleChaserImage;
@@ -36,7 +37,15 @@ class Enemy extends GameCharacter {
     changeState();
     initActions();
     
-    if (goToPos != null && dirToPoint != null && super.collisionType != CollisionType.PROJECTILE) {
+    // Stop enemy movement when hit by projectile for the duration of maxFrames
+    if (super.collisionType == CollisionType.PROJECTILE) {
+      isHit = true;
+      frameNumber = 1;
+    } else if (frameNumber == maxFrames) {
+      isHit = false;
+    }
+    
+    if (goToPos != null && dirToPoint != null && !isHit) {
       dirToPoint.normalize();
       super.velocity.x = PVector.mult(dirToPoint, speed).x;
     }
