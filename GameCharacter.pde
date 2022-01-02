@@ -16,6 +16,7 @@ class GameCharacter {
   
   // Health
   protected float health;
+  protected boolean isHit = false;
   private CauseOfDeath causeOfDeath;
 
   GameCharacter(float newMass, float x, float y, float newHealth) {
@@ -68,12 +69,12 @@ class GameCharacter {
     // Bounce off left screen
     if (position.x <= halfWidth) {
       velocity.x *= groundBounce;
-      position.x = halfWidth;
+      position.x = halfWidth+10;
     }
     // Bounce off right screen
     if (position.x >= width-halfWidth) {
       velocity.x *= groundBounce;
-      position.x = width-halfWidth;
+      position.x = width-halfWidth-10;
     }
   }
   
@@ -121,18 +122,21 @@ class GameCharacter {
       
       switch(type) {
         case BLOCK:
-          handlePlaformCollisions(objectHeight, objectWidth, objectLocation);
+          stopCollidedElement(objectHeight, objectWidth, objectLocation);
           break;
         case ENEMY:
           if (health > 0) { health--; }
           causeOfDeath = CauseOfDeath.ENEMY;
+          stopCollidedElement(objectHeight, objectWidth, objectLocation);
+          pushCollidedElement();
+          isHit = true;
           break;
         case PORTAL:
           gameState = GameState.LEVELCHANGE;
           break;
         case PROJECTILE:
-          handlePlaformCollisions(objectHeight, objectWidth, objectLocation);
-          handleProjectileCollisions();
+          stopCollidedElement(objectHeight, objectWidth, objectLocation);
+          pushCollidedElement();
           break;
       }
     }
@@ -150,7 +154,7 @@ class GameCharacter {
     return Math.sqrt(Math.pow(yDistance, 2));
   }
   
-  private void handlePlaformCollisions(float objectHeight, float objectWidth, PVector objectLocation) {
+  private void stopCollidedElement(float objectHeight, float objectWidth, PVector objectLocation) {
       switch(collisionSide) {
         case RIGHT:
           velocity.x *= groundBounce;
@@ -172,20 +176,19 @@ class GameCharacter {
       }
   }
   
-  private void handleProjectileCollisions() {
-    float collisionForce = 20;
+  private void pushCollidedElement() {
       switch(collisionSide) {
         case RIGHT:
-          velocity.x = -collisionForce;
+          velocity.x = -50;
           break;
         case LEFT:
-          velocity.x = collisionForce;
+          velocity.x = 50;
           break;
         case TOP:
-          velocity.y = collisionForce;
+          velocity.y = 15;
           break;
         case BOTTOM:
-          velocity.y = -collisionForce;
+          velocity.y = -15;
           break;
       }
   }

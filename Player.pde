@@ -11,17 +11,23 @@ class Player extends GameCharacter {
   private boolean isFacingLeft = false;
 
   // Animation
-  private boolean hasPlayed = false;
+  private boolean jumpHasPlayed = false;
+  private boolean hitHasPlayed = false;
   private PImage idleImage;
   private PImage moveImage;
-  private PImage animationImage;
+  private PImage damageImage;
+  private PImage animationSprite;
+  private PImage lifeImage;
+  private PImage lifeSprite;
 
   Player(float mass, float x, float y) {
-    super(mass, x, y, 1);
+    super(mass, x, y, 3);
 
     // Animation
     idleImage = loadImage("images/Ninja Frog/Idle (32x32).png");
     moveImage = loadImage("images/Ninja Frog/Run (32x32).png");
+    lifeImage = loadImage("images/Big Heart Idle (18x14).png");
+    damageImage = loadImage("images/Ninja Frog/Hit (32x32).png");
   }
   
   // GET
@@ -115,17 +121,23 @@ class Player extends GameCharacter {
   /** VISUALS **/
 
   void display() {
+    if (lifeImage != null) {
+      lifeSprite = lifeImage.get(calcFrameNumber(lifeImage.width, 18)*18, 0, 18, 14);
+      for(int i = 0; i < super.health; i++) {
+        image(lifeSprite, width-(50*i)-50, 30, 30, 30);
+      }
+    }
+    
     initAnimations();
-
-    if (animationImage != null) {
+    if (animationSprite != null) {
       if (isFacingLeft) {
         pushMatrix();
         translate(super.cWidth,0);
         scale(-1,1);
-        image(animationImage, -calcLocationX(super.position.x), calcLocationY(super.position.y), super.cWidth, super.cHeight);
+        image(animationSprite, -calcLocationX(super.position.x), calcLocationY(super.position.y), super.cWidth, super.cHeight);
         popMatrix();
       } else {
-        image(animationImage, calcLocationX(super.position.x), calcLocationY(super.position.y), super.cWidth, super.cHeight);
+        image(animationSprite, calcLocationX(super.position.x), calcLocationY(super.position.y), super.cWidth, super.cHeight);
       }
     }
   }
@@ -134,7 +146,15 @@ class Player extends GameCharacter {
   /** ANIMATIONS **/
 
   private void initAnimations() {
-    if (!right && !left && !up && !down && super.isOnGround) {
+    if (super.isHit) {
+      animationSprite = damageImage.get(calcFrameNumber(damageImage.width, 32)*32, 0, 32, 32);
+      if (!hitHasPlayed) {
+        frameNumber = 1;
+        hitHasPlayed = true;
+      } else if (frameNumber == maxFrames) {
+        super.isHit = false;
+      }
+    } else if (!right && !left && !up && !down && super.isOnGround) {
       // Idle animation
       playIdleAnimation();
     } else if (down && super.isOnGround) {
@@ -152,12 +172,15 @@ class Player extends GameCharacter {
     }
 
     if (up && super.isOnGround) {
-      hasPlayed = false;
+      jumpHasPlayed = false;
+    }
+    if (!super.isHit) {
+      hitHasPlayed = false;
     }
   }
 
   private void playIdleAnimation() {
-    animationImage = idleImage.get(frameNumber*32, 0, 32, 32);
+    animationSprite = idleImage.get(frameNumber*32, 0, 32, 32);
     if (frameNumber == 1) {
       super.animateSize(0.52, 0.48);
     } else if (frameNumber == (maxFrames * 0.5)) {
@@ -170,7 +193,7 @@ class Player extends GameCharacter {
   }
 
   private void playMoveAnimation() {
-    animationImage = moveImage.get(frameNumber*32, 0, 32, 32);
+    animationSprite = moveImage.get(frameNumber*32, 0, 32, 32);
     if (frameNumber == 1) {
       super.animateSize(0.46, 0.54);
     } else if (frameNumber == (maxFrames * 0.15)) {
@@ -187,7 +210,7 @@ class Player extends GameCharacter {
   }
 
   private void playJumpAnimation() {
-    if (!hasPlayed) {
+    if (!jumpHasPlayed) {
       if (frameNumber == 1) {
         super.animateSize(0.61, 0.39);
       } else if (frameNumber == (maxFrames * 0.5)) {
@@ -196,8 +219,15 @@ class Player extends GameCharacter {
         super.animateSize(0.3, 0.7);
       } else if (frameNumber == maxFrames) {
         super.animateSize(0.39, 0.61);
-        hasPlayed = true;
+        jumpHasPlayed = true;
       }
     }
+  }
+  
+  /* HELPER METHODS */
+  int calcFrameNumber(float imageWidth, float spriteSize) {
+    float numOfSprites = (imageWidth/spriteSize)-1;
+    float frameDifference = numOfSprites/maxFrames;
+    return int(frameNumber*frameDifference);
   }
 }
