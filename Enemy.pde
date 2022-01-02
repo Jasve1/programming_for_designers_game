@@ -1,6 +1,6 @@
 class Enemy extends GameCharacter {
   private EnemyType type;
-  private float speed = 2;
+  private float speed = 0.5;
 
   private PVector primaryPosition;
   private float moveDistance = 200;
@@ -21,7 +21,7 @@ class Enemy extends GameCharacter {
   private PImage animationImage;
   
   Enemy(float x, float y, EnemyType newType) {
-    super(130, x, y, 1, 20);
+    super(130, x, y, 1);
     primaryPosition = new PVector(x,y);
     type = newType;
     
@@ -47,7 +47,7 @@ class Enemy extends GameCharacter {
     
     if (goToPos != null && dirToPoint != null && !isHit) {
       dirToPoint.normalize();
-      super.velocity.x = PVector.mult(dirToPoint, speed).x;
+      super.velocity.x += PVector.mult(dirToPoint, speed).x;
     }
     
     super.initGravity();

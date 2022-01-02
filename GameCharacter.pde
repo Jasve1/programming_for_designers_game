@@ -3,7 +3,7 @@ class GameCharacter {
   protected PVector velocity = new PVector(0, 0);
   protected float gravity = worldGravity;
   protected PVector position;
-  private float speedLimit;
+  private float speedLimit = 5;
 
   // Size
   protected PVector dimension;
@@ -14,13 +14,14 @@ class GameCharacter {
   protected boolean isOnGround = false;
   protected CollisionType collisionType;
   private CollisionSides collisionSide;
+  private PVector force = new PVector(0, 0);
   
   // Health
   protected float health;
   protected boolean isHit = false;
   private CauseOfDeath causeOfDeath;
 
-  GameCharacter(float newMass, float x, float y, float newHealth, float newSpeedLimit) {
+  GameCharacter(float newMass, float x, float y, float newHealth) {
     // Size
     mass = newMass;
     dimension = new PVector(0.5, 0.5);
@@ -29,7 +30,6 @@ class GameCharacter {
     halfWidth = cWidth/2;
     
     position = new PVector(x,y);
-    speedLimit = newSpeedLimit;
     
     health = newHealth;
   }
@@ -81,8 +81,14 @@ class GameCharacter {
   }
   
   protected void applyMovement() {
+    // Add force from collision
+    if (collisionType == CollisionType.PROJECTILE || collisionType == CollisionType.ENEMY) {
+      collisionType = null;
+      velocity.add(force);
+    }
+
     // Move player
-    PVector timedVelocity = timeSpeedWMillis(velocity);
+    PVector timedVelocity = timeSpeedWMillis(velocity); // Time fix
     position.add(timedVelocity);
   }
   
@@ -131,6 +137,7 @@ class GameCharacter {
         case ENEMY:
           if (health > 0) { health--; }
           causeOfDeath = CauseOfDeath.ENEMY;
+          // Push player away from enemy so as to not continue to take damage
           stopCollidedElement(objectHeight, objectWidth, objectLocation);
           pushCollidedElement();
           isHit = true;
@@ -175,16 +182,16 @@ class GameCharacter {
   private void pushCollidedElement() {
       switch(collisionSide) {
         case RIGHT:
-          velocity.x = -speedLimit;
+          force.x = -50;
           break;
         case LEFT:
-          velocity.x = speedLimit;
+          force.x = 50;
           break;
         case TOP:
-          velocity.y = speedLimit;
+          force.y = 15;
           break;
         case BOTTOM:
-          velocity.y = -speedLimit;
+          force.y = -15;
           break;
       }
   }
