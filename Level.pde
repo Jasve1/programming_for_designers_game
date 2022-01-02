@@ -117,7 +117,8 @@ class Level {
     PVector projectileLocation = projectile.getLocation();
 
     for(int e = 0; e < enemies.length; e++) {
-      enemies[e].checkCollision(projectileHeight, projectileWidth, projectileLocation, CollisionType.PROJECTILE);
+      boolean hasCollided = enemies[e].checkCollision(projectileHeight, projectileWidth, projectileLocation, CollisionType.PROJECTILE);
+      if (hasCollided) { projectile.setIsReturning(hasCollided); }
     }
   }
   

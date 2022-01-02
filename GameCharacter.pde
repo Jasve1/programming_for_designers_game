@@ -3,7 +3,7 @@ class GameCharacter {
   protected PVector velocity = new PVector(0, 0);
   protected float gravity = worldGravity;
   protected PVector position;
-  private float speedLimit = 5;
+  private float speedLimit;
 
   // Size
   protected PVector dimension;
@@ -12,6 +12,7 @@ class GameCharacter {
 
   // Collision Variables
   protected boolean isOnGround = false;
+  protected CollisionType collisionType;
   private CollisionSides collisionSide;
   
   // Health
@@ -19,7 +20,7 @@ class GameCharacter {
   protected boolean isHit = false;
   private CauseOfDeath causeOfDeath;
 
-  GameCharacter(float newMass, float x, float y, float newHealth) {
+  GameCharacter(float newMass, float x, float y, float newHealth, float newSpeedLimit) {
     // Size
     mass = newMass;
     dimension = new PVector(0.5, 0.5);
@@ -28,6 +29,7 @@ class GameCharacter {
     halfWidth = cWidth/2;
     
     position = new PVector(x,y);
+    speedLimit = newSpeedLimit;
     
     health = newHealth;
   }
@@ -93,6 +95,8 @@ class GameCharacter {
     float verticalDistance = getVerticalDistance(centerOrigin(position.y, cHeight), centerOrigin(objectLocation.y, objectHeight));
     
     boolean collision = verticalDistance <= combinedHalfHeights && horizontalDistance <= combinedHalfWidths;
+    
+    collisionType = type;
     
     if (collision) {
       // Detect collision side
@@ -171,16 +175,16 @@ class GameCharacter {
   private void pushCollidedElement() {
       switch(collisionSide) {
         case RIGHT:
-          velocity.x = -50;
+          velocity.x = -speedLimit;
           break;
         case LEFT:
-          velocity.x = 50;
+          velocity.x = speedLimit;
           break;
         case TOP:
-          velocity.y = 15;
+          velocity.y = speedLimit;
           break;
         case BOTTOM:
-          velocity.y = -15;
+          velocity.y = -speedLimit;
           break;
       }
   }

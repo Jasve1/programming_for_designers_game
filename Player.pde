@@ -21,7 +21,7 @@ class Player extends GameCharacter {
   private PImage lifeSprite;
 
   Player(float mass, float x, float y) {
-    super(mass, x, y, 3);
+    super(mass, x, y, 3, 5);
 
     // Animation
     idleImage = loadImage("images/Ninja Frog/Idle (32x32).png");

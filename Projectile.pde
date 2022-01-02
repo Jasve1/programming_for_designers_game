@@ -26,6 +26,9 @@ public class Projectile {
   PVector getLocation() { return location; }
   float getWidth() { return w; }
   float getHeight() { return h; }
+  
+  // SET
+  void setIsReturning(boolean isReturningValue) { isReturning = isReturningValue; }
 
   //The horizontal movement of a projectile.
   void setDirection() { 
