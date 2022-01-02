@@ -83,7 +83,7 @@ class Enemy extends GameCharacter {
           break;
       }
     } else {
-      super.mass = 130;
+      if (type == EnemyType.SPIKE) { super.mass = 110; }
       dirToPoint = PVector.sub(primaryPosition, super.position);
       isFacingLeft = super.position.x < primaryPosition.x;
     }

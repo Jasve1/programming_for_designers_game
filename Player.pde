@@ -19,6 +19,9 @@ class Player extends GameCharacter {
   private PImage animationSprite;
   private PImage lifeImage;
   private PImage lifeSprite;
+  
+  // Sound
+  private AudioPlayer jumpSound;
 
   Player(float mass, float x, float y) {
     super(mass, x, y, 3);
@@ -28,6 +31,9 @@ class Player extends GameCharacter {
     moveImage = loadImage("images/Ninja Frog/Run (32x32).png");
     lifeImage = loadImage("images/Big Heart Idle (18x14).png");
     damageImage = loadImage("images/Ninja Frog/Hit (32x32).png");
+    
+    // Sound
+    jumpSound = minim.loadFile("sounds/jump.wav");
   }
   
   // GET
@@ -110,6 +116,10 @@ class Player extends GameCharacter {
   private void initJumping() {
     // Jumping
     if (up && super.isOnGround) {
+      if (!jumpSound.isPlaying()) {
+        jumpSound.rewind();
+        jumpSound.play();
+      }
       super.isOnGround = false;
       super.velocity.y = jumpForce;
       super.gravity = 0;

@@ -1,3 +1,9 @@
+import ddf.minim.*;
+
+Minim minim;
+AudioPlayer soundtrack;
+AudioPlayer nextLevelSound;
+
 Player player;
 Level level = null;
 ParticleSystem ps;
@@ -37,7 +43,7 @@ int score = 0;
 int maxFrames = 10;
 int frameNumber = 1;
 int animationUpdate = millis();
-int durationOneFrame = 24;
+int durationOneFrame = 48;
 
 PFont ubuntu;
 
@@ -62,6 +68,12 @@ void setup() {
   titleButton = new Button(50, 50, "Go to tile menu", ButtonType.TITLE);
   scoreButton = new Button((width/2)-100, (height/2)+90, "Scoreboard", ButtonType.SEESCORE);
   scoreboard = new Scoreboard();
+  
+  // Sound
+  minim = new Minim(this);
+  soundtrack = minim.loadFile("sounds/soundtrack.wav");
+  soundtrack.loop();
+  nextLevelSound = minim.loadFile("sounds/powerUp.wav");
 }
 
 void draw() {
@@ -87,7 +99,7 @@ void gameStateManager() {
       textSize(128);
       fill(#982C20);
       textAlign(CENTER);
-      text("Hello!", 0, (height/2)-200, width, 200);
+      text("RIBBIT", 0, (height/2)-200, width, 200);
       
       startButton.display();
       scoreButton.display();
@@ -100,6 +112,10 @@ void gameStateManager() {
       level.update();
       break;
     case LEVELCHANGE:
+      if (!nextLevelSound.isPlaying()) {
+        nextLevelSound.rewind();
+        nextLevelSound.play();
+      }
       level = null;
       if (currentLevel < maxLevels) {
         currentLevel++;

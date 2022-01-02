@@ -20,6 +20,9 @@ class GameCharacter {
   protected float health;
   protected boolean isHit = false;
   private CauseOfDeath causeOfDeath;
+  
+  // Sound
+  private AudioPlayer isHitSound;
 
   GameCharacter(float newMass, float x, float y, float newHealth) {
     // Size
@@ -32,6 +35,9 @@ class GameCharacter {
     position = new PVector(x,y);
     
     health = newHealth;
+    
+    // Sound
+    isHitSound = minim.loadFile("sounds/hitHurt.wav");
   }
   
   // GET
@@ -135,7 +141,13 @@ class GameCharacter {
           stopCollidedElement(objectHeight, objectWidth, objectLocation);
           break;
         case ENEMY:
-          if (health > 0) { health--; }
+          if (health > 0) {
+            if (!isHitSound.isPlaying()) {
+              isHitSound.rewind();
+              isHitSound.play();
+            }
+            health--;
+          }
           causeOfDeath = CauseOfDeath.ENEMY;
           // Push player away from enemy so as to not continue to take damage
           stopCollidedElement(objectHeight, objectWidth, objectLocation);

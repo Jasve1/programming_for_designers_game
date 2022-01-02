@@ -7,11 +7,17 @@ class Level {
   //projectile
   private Projectile projectile;
   
+  // Sound
+  private AudioPlayer succesSound;
+  
   Level(int level, int numOfEnemies, int numOfPlatforms) {
     PImage levelImage = loadImage("images/lvl" + level + ".jpg");
 
     platforms = new GameObject[numOfPlatforms];
     enemies = new Enemy[numOfEnemies];
+    
+    // Sound
+    succesSound = minim.loadFile("sounds/pickupCoin.wav");
     
     renderLevel(levelImage);
   }
@@ -162,11 +168,19 @@ class Level {
   }
   
   private void removeDeadEnemy(int indexOfDead) {
+    // Play succes sound
+    if (!succesSound.isPlaying()) {
+      succesSound.rewind();
+      succesSound.play();
+    }
+    
+    // Get point
     if (enemies[indexOfDead].getCauseOfDeath() == CauseOfDeath.ENEMY) {
       score += 2;
     } else {
       score++;
     }
+ 
     Enemy[] tempEnemyList = new Enemy[enemies.length - 1];
     int currentEnemy = 0;
     for(int i = 0; i < enemies.length; i++) {
