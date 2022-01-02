@@ -182,10 +182,10 @@ class GameCharacter {
   private void pushCollidedElement() {
       switch(collisionSide) {
         case RIGHT:
-          force.x = -50;
+          force.x = -55;
           break;
         case LEFT:
-          force.x = 50;
+          force.x = 55;
           break;
         case TOP:
           force.y = 15;
